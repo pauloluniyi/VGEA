@@ -6,7 +6,7 @@ Include: bash vim less man-db apt-utils tzdata
 
 %help
 
-    This is the container for my pipeline
+    This is the container for the VGEA pipeline
 
 %labels
 
