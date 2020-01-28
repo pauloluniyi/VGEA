@@ -9,16 +9,16 @@ Dependencies:
 
 The VGEA pipeline requires the following dependencies:
 
-Python 3 (www.python.org)
-Samtools (Li et al., 2009) 
-IVA (Hunt et al., 2015)
-Fastp (Chen et al., 2018)
-Trimmommatic, optional but highly recommended (Bolger et al., 2014)
-KMC (Kokot et al., 2017)
-MUMmer (Marcais et al., 2018)
-SMALT (Ponstingl or BWA (Li and Durbin 2009) or BOWTIE (Langmead 2010)
-Fastaq (https://github.com/sanger-pathogens/Fastaq)
-Biopython (Cook et al., 2009)
+* Python 3 (www.python.org),
+* Samtools (Li et al., 2009), 
+* IVA (Hunt et al., 2015),
+* Fastp (Chen et al., 2018),
+* Trimmommatic, optional but highly recommended (Bolger et al., 2014),
+* KMC (Kokot et al., 2017),
+* MUMmer (Marcais et al., 2018),
+* SMALT (Ponstingl or BWA (Li and Durbin 2009) or BOWTIE (Langmead 2010),
+* Fastaq (https://github.com/sanger-pathogens/Fastaq),
+* Biopython (Cook et al., 2009).
 
 
 This pipeline was built on the snakemake workflow management system (Koster and Rahmann 2012). Several tools were used to perform different tasks within the pipeline: Samtools (Li et al., 2009) for splitting of bam or fastq files into forward and reverse reads; IVA (Hunt et al., 2015) for de novo assembly to generate contigs; Shiver (Wymant et al., 2018) to pre-process reads for quality and contamination, then map to a reference tailored to the sample using corrected contigs supplemented with the user’s choice of existing reference sequences
