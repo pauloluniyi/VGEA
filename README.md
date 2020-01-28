@@ -10,6 +10,7 @@ Dependencies:
 The VGEA pipeline requires the following dependencies:
 
 * Python 3 (www.python.org),
+* Snakemake (Koster and Rahmann 2012),
 * Samtools (Li et al., 2009), 
 * IVA (Hunt et al., 2015),
 * Fastp (Chen et al., 2018),
