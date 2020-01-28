@@ -1,2 +1,10 @@
 # VGEA
 VGEA (Viral Genomes Easily Assembled) is a pipeline for advanced assembly of viral genomes from next-generation sequencing data
+
+VGEA was developed to aid in the analysis of next generation sequencing data. Users can do the following with this pipeline:
+
+❖ Split bam or fastq files into forward and reverse reads. ❖ Carry out de novo assembly of forward and reverse reads to generate contigs. ❖ Pre-process reads for quality and contamination. ❖ Map reads to a reference tailored to the sample using corrected contigs supplemented by the user’s choice of reference sequences.
+
+Dependencies: This pipeline requires the following dependencies: ❖ Python 3 ❖ Samtools ❖ IVA ❖ fastp ❖ Trimmommatic, optional but highly recommended ❖ KMC ❖ MUMmer ❖ SMALT or BWA or BOWTIE ❖ Fastaq ❖ Biopython ❖ MAFFT ❖ BLAST version 2.2.28 ❖ SPAdes
+
+This pipeline was built on the snakemake workflow management system (Koster and Rahmann 2012). Several tools were used to perform different tasks within the pipeline: Samtools (Li et al., 2009) for splitting of bam or fastq files into forward and reverse reads; IVA (Hunt et al., 2015) for de novo assembly to generate contigs; Shiver (Wymant et al., 2018) to pre-process reads for quality and contamination, then map to a reference tailored to the sample using corrected contigs supplemented with the user’s choice of existing reference sequences
