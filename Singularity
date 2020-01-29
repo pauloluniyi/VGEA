@@ -104,7 +104,7 @@ Include: bash vim less man-db apt-utils tzdata
     cd ~
 
     # Install java
-    apt-get install default-jre
+    yes | apt-get install default-jdk
 
     # Install smalt
     wget https://sourceforge.net/projects/smalt/files/latest/download -O smalt.tgz
