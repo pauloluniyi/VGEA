@@ -127,7 +127,7 @@ Include: bash vim less man-db apt-utils tzdata
 
 %files
 
-    # Copy test data files
+    # Copy test data files available at (https://drive.google.com/drive/folders/1Z-kMWj9fOEEu0lFjw_F4EBLl73JqklLE?usp=sharing)
     934.bam /data
     MyRefAlignment.fasta /data
     MyAdapters.fasta /data
