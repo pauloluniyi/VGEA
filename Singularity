@@ -16,13 +16,13 @@ Include: bash vim less man-db apt-utils tzdata
 
 %setup
 
-    # make sure the "pipeline/scripts" folder exists
-    mkdir -p ${SINGULARITY_ROOTFS}/pipeline/scripts
+    # make sure the "pipeline/" folder exists
+    mkdir -p ${SINGULARITY_ROOTFS}/pipeline
     # make sure the "/data" folder exists
     mkdir ${SINGULARITY_ROOTFS}/data
 
 %environment
-    
+
     PATH="/usr/local/anaconda/bin:$PATH"
 
 %post
@@ -42,7 +42,7 @@ Include: bash vim less man-db apt-utils tzdata
     deb-src http://us.archive.ubuntu.com/ubuntu/ xenial-proposed main restricted universe multiverse
     deb-src http://us.archive.ubuntu.com/ubuntu/ xenial-backports main restricted universe multiverse" >> /etc/apt/sources.list
 
-    
+
     # Install wget, git, make
     apt-get -y --force-yes update
     yes | apt-get install build-essential
@@ -56,7 +56,7 @@ Include: bash vim less man-db apt-utils tzdata
     # Install curl, lzma
     yes | apt-get install curl liblzma-dev libncurses5-dev
 
- 
+
     # Install Anaconda3
     if [ ! -d /usr/local/anaconda ]; then
          wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh \
@@ -75,12 +75,10 @@ Include: bash vim less man-db apt-utils tzdata
     pip install fastaq
 
     # Install biopython
-    conda install -c conda-forge biopython 
+    conda install -c conda-forge biopython
 
     # Install blast
-    wget ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.10.0+-x64-linux.tar.gz
-    tar -xzf ncbi-blast-2.10.0+-x64-linux.tar.gz
-    echo 'PATH=$PATH:~/ncbi-blast-2.10.0+/bin/' >> $SINGULARITY_ENVIRONMENT
+    conda install -c bioconda blast
 
     # Install samtools
     conda install -c bioconda samtools
@@ -89,54 +87,33 @@ Include: bash vim less man-db apt-utils tzdata
     conda install -c bioconda mummer
 
     # Install fastp
-    git clone https://github.com/OpenGene/fastp.git
-    cd fastp
-    make && make install
-    cd ..
+    conda install -c bioconda fastp
 
     # Install mafft
-    wget https://mafft.cbrc.jp/alignment/software/mafft-7.453-without-extensions-src.tgz
-    tar -xzf mafft-7.453-without-extensions-src.tgz
-    cd mafft-7.453-without-extensions/core/
-    make clean
-    make
-    make install
-    cd ~
-
-    # Install java
-    yes | apt-get install default-jdk
+    conda install -c bioconda mafft
 
     # Install smalt
-    wget https://sourceforge.net/projects/smalt/files/latest/download -O smalt.tgz
-    tar -xzf smalt.tgz
-    cd smalt-0.7.6/
-    ./configure
-    make
-    make install
-    cd ~
+    conda install -c bioconda smalt
 
     # Install bwa
-    git clone https://github.com/lh3/bwa.git
-    cd bwa
-    make
-    echo 'PATH=$PATH:~/bwa/' >> $SINGULARITY_ENVIRONMENT
-    
-    # Install bowtie
-    wget https://sourceforge.net/projects/bowtie-bio/files/bowtie2/2.3.5.1/bowtie2-2.3.5.1-linux-x86_64.zip/download -O bowtie2.zip 
-    unzip bowtie2.zip
-    echo 'PATH=$PATH:~/bowtie2-2.3.5.1-linux-x86_64/' >> $SINGULARITY_ENVIRONMENT
+    conda install -c bioconda bwa
 
-    # Install kmc 
-    wget https://github.com/refresh-bio/KMC/releases/download/v3.0.0/KMC3.linux.tar.gz
-    tar -xzf KMC3.linux.tar
-    echo 'PATH=$PATH:~/kmc/' >> $SINGULARITY_ENVIRONMENT
-    echo 'PATH=$PATH:~/kmc_dump/' >> $SINGULARITY_ENVIRONMENT
-    echo 'PATH=$PATH:~/kmc_tools/' >> $SINGULARITY_ENVIRONMENT
+    # Install unzip
+    yes | apt-get install -y unzip zip
+
+    # Install bowtie
+    conda install -c bioconda bowtie2
+
+    # Install kmc
+    conda install -c bioconda kmc
 
     # Install iva
     conda install -c bioconda iva
 
-    
+    # Install java
+    yes | apt-get install default-jdk
+
+
     # Add the pipeline scripts to the $PATH and make sure they are executable
     chmod +x /pipeline/scripts/*.sh
     chmod +x /pipeline/scripts/*.jar
@@ -150,17 +127,16 @@ Include: bash vim less man-db apt-utils tzdata
 
 %files
 
-    # Copy data files
-    data/OWOIF.bam
-    data/MyRefAlignment.fasta
-    data/MyAdapters.fasta
-    data/MyPrimers.fasta
+    # Copy test data files
+    934.bam /data
+    MyRefAlignment.fasta /data
+    MyAdapters.fasta /data
+    MyPrimers.fasta /data
 
     # Copy pipeline scripts
-    pipeline/scripts /pipeline
-    pipeline/Snakefile /pipeline
+    scripts/ /pipeline
+    Snakefile /pipeline
 
 %runscript
-  
+
     snakemake -q -s /pipeline/Snakefile
-    
