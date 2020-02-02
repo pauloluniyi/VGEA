@@ -17,7 +17,7 @@ The VGEA pipeline requires the following dependencies:
 * Trimmommatic, optional but highly recommended (Bolger et al., 2014)
 * KMC (Kokot et al., 2017)
 * MUMmer (Marcais et al., 2018)
-* SMALT (Ponstingl or BWA (Li and Durbin 2009) or BOWTIE (Langmead 2010)
+* SMALT (https://www.sanger.ac.uk/science/tools/smalt-0) or BWA (Li and Durbin 2009) or BOWTIE (Langmead 2010)
 * Fastaq (https://github.com/sanger-pathogens/Fastaq)
 * Biopython (Cook et al., 2009)
 * MAFFT (Katoh et al., 2002)
