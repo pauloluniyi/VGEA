@@ -47,7 +47,7 @@ rule shiver_init:
  output:
   initialization_directory = "MyInitDir"
  shell:
-   "shiver_init.sh {output} config.sh {input[0]} {input[1]} {input[2]}"
+   "/pipeline/scripts/shiver_init.sh {output} /pipeline/scripts/config.sh {input[0]} {input[1]} {input[2]}"
 
 rule align_contigs:
  message: "Aligning contigs"
@@ -59,9 +59,9 @@ rule align_contigs:
   aligned_contigs_raw = "{id}_raw_wRefs.fasta",
   aligned_contigs_cut = "{id}_cut_wRefs.fasta"
  shell:
-  "shiver_align_contigs.sh {input[0]} config.sh {input[1]}/contigs.fasta OWOIF"
+  "/pipeline/scripts/shiver_align_contigs.sh {input[0]} /pipeline/scripts/config.sh {input[1]}/contigs.fasta 934"
 
-#OWOIF in the shell of rule align_contigs should be changed to the sample ID
+#934 in the shell of rule align_contigs should be changed to the sample ID
 
 rule map:
  message: "Mapping paired-end reads to reference genome"
@@ -82,7 +82,7 @@ rule map:
   coords = "{id}_coords.csv",
   insert_size_dist = "{id}_InsertSizeCounts.csv"
  shell:
-  "shiver_map_reads.sh {input[0]} config.sh {input[1]}/contigs.fasta OWOIF \
+  "/pipeline/scripts/shiver_map_reads.sh {input[0]} /pipeline/scripts/config.sh {input[1]}/contigs.fasta 934 \
  {input[2]} {input[3]} {input[4]} {input[5]}"
 
-#OWOIF in the shell of rule map should be changed to the sample ID
+#934 in the shell of rule map should be changed to the sample ID
