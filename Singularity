@@ -49,6 +49,7 @@ Include: bash vim less man-db apt-utils tzdata
     yes | apt-get install git
     yes | apt-get install wget
     yes | apt-get install autoconf autogen libtool
+    yes | apt install bc
 
     # Install zlib, cmake
     yes | apt-get install zlib1g-dev libbz2-dev pkg-config cmake
