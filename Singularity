@@ -114,6 +114,9 @@ Include: bash vim less man-db apt-utils tzdata
     # Install java
     yes | apt-get install default-jdk
 
+    # Install Python2
+    yes | apt install python-pip
+    yes | apt install python2.7
 
     # Add the pipeline scripts to the $PATH and make sure they are executable
     chmod +x /pipeline/scripts/*.sh
