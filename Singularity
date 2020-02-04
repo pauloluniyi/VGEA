@@ -70,7 +70,7 @@ Include: bash vim less man-db apt-utils tzdata
 
 
     # Install snakemake
-    conda install -c bioconda -c conda-forge snakemake
+    conda install -c bioconda -c conda-forge snakemake==5.1.5
 
     # Install fastaq
     pip install fastaq
