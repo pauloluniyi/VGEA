@@ -70,10 +70,11 @@ Include: bash vim less man-db apt-utils tzdata
 
 
     # Install snakemake
-    conda install -c bioconda -c conda-forge snakemake==5.1.5
+    conda install -c bioconda -c conda-forge snakemake
 
     # Install fastaq
-    pip install fastaq
+    yes | apt-get install python3-pip
+    pip3 install pyfastaq
 
     # Install biopython
     conda install -c conda-forge biopython
