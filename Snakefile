@@ -34,7 +34,7 @@ rule assembly:
   forward_read = rules.bamtoFastq.output.forward_read,
   reverse_read = rules.bamtoFastq.output.reverse_read
  output:
-  contigs = "{id}_iva"
+  contigs = directory("{id}_iva")
  shell:
   "iva -f {input[0]} -r {input[1]} {output}"
 
@@ -45,7 +45,7 @@ rule shiver_init:
   Adapters = "MyAdapters.fasta",
   Primers = "MyPrimers.fasta"
  output:
-  initialization_directory = "MyInitDir"
+  initialization_directory = directory("MyInitDir")
  shell:
    "/pipeline/scripts/shiver_init.sh {output} /pipeline/scripts/config.sh {input[0]} {input[1]} {input[2]}"
 
