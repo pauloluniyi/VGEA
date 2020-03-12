@@ -12,7 +12,7 @@ Include: bash vim less man-db apt-utils tzdata
 
     AUTHOR Paul Oluniyi - oluniyip@run.edu.ng
     PhD researcher at ACEGID, Redeemer's University
-    Version - v1.0.0
+    Version - v1.0
 
 %setup
 
