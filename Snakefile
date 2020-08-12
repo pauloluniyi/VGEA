@@ -67,9 +67,9 @@ rule align_contigs:
  conda:
   "vgea.yml"
  shell:
-  "~/pipeline/scripts/shiver_align_contigs.sh {input[0]} ~/pipeline/scripts/config.sh {input[1]}/contigs.fasta CV18"
+  "~/pipeline/scripts/shiver_align_contigs.sh {input[0]} ~/pipeline/scripts/config.sh {input[1]}/contigs.fasta 934"
 
-#CV18 in the shell of rule align_contigs should be changed to the sample ID
+#934 in the shell of rule align_contigs should be changed to the sample ID
 
 rule map:
  message: "Mapping paired-end reads to reference genome"
@@ -92,7 +92,7 @@ rule map:
  conda:
   "vgea.yml"
  shell:
-  "~/pipeline/scripts/shiver_map_reads.sh {input[0]} ~/pipeline/scripts/config.sh {input[1]}/contigs.fasta CV18 \
+  "~/pipeline/scripts/shiver_map_reads.sh {input[0]} ~/pipeline/scripts/config.sh {input[1]}/contigs.fasta 934 \
  {input[2]} {input[3]} {input[4]} {input[5]}"
 
-#CV18 in the shell of rule map should be changed to the sample ID
+#934 in the shell of rule map should be changed to the sample ID
