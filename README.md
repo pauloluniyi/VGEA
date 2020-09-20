@@ -1,5 +1,5 @@
 # VGEA
-VGEA (Viral Genomes Easily Assembled) is a pipeline for advanced assembly of viral genomes from next-generation sequencing data
+VGEA (Viral Genomes Easily Assembled) is a pipeline for advanced assembly of RNA viral genomes from next-generation sequencing data
 
 VGEA was developed to aid in the analysis of next generation sequencing data. Users can do the following with this pipeline:
 
