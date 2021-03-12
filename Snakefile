@@ -1,4 +1,6 @@
 IDS, = glob_wildcards("{id}.bam")
+wfbasedir = workflow.basedir
+configfile: "{wfbasedir}/config.yaml"
 
 rule all:
  input:
@@ -53,7 +55,7 @@ rule shiver_init:
  conda:
   "vgea.yml"
  shell:
-   "~/pipeline/scripts/shiver_init.sh {output} ~/pipeline/scripts/config.sh {input[0]} {input[1]} {input[2]}"
+   "shiver_init.sh {output} {wfbasedir}/config.sh {input[0]} {input[1]} {input[2]}"
 
 rule align_contigs:
  message: "Aligning contigs"
@@ -67,7 +69,7 @@ rule align_contigs:
  conda:
   "vgea.yml"
  shell:
-  "~/pipeline/scripts/shiver_align_contigs.sh {input[0]} ~/pipeline/scripts/config.sh {input[1]}/contigs.fasta 934"
+  "shiver_align_contigs.sh {input[0]} {wfbasedir}/config.sh {input[1]}/contigs.fasta 934"
 
 #934 in the shell of rule align_contigs should be changed to the sample ID
 
@@ -92,7 +94,7 @@ rule map:
  conda:
   "vgea.yml"
  shell:
-  "~/pipeline/scripts/shiver_map_reads.sh {input[0]} ~/pipeline/scripts/config.sh {input[1]}/contigs.fasta 934 \
+  "shiver_map_reads.sh {input[0]} {wfbasedir}/config.sh {input[1]}/contigs.fasta 934 \
  {input[2]} {input[3]} {input[4]} {input[5]}"
 
 #934 in the shell of rule map should be changed to the sample ID
