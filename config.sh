@@ -29,15 +29,15 @@ fastaq='fastaq'
 # java -jar path/to/where/it/lives/trimmomatic-0.36.jar
 # If someone else installed it for you (e.g. on MRC CLIMB) there may be an alias
 # which means you just type 'trimmomatic' to run it:
-trimmomatic="java -jar trimmomatic-0.39.jar"
+trimmomatic="trimmomatic"
 # If you leave 'GiveHXB2coords', below, as 'true', we'll do pairwise alignment
 # of the mapping reference with HXB2. You may as well use mafft options to make
 # it more accurate (though slower).
 MafftArgsForPairwise='--maxiterate 1000 --localpair'
 
 # Minimum contig length: contigs shorter than this will be discarded at the
-# start. In addition, when contigs are blasted against the existing reference
-# set, we will only keep hits for which the length of the hit multipled by its
+# start. In addition, when contigs are blasted against the existing reference 
+# set, we will only keep hits for which the length of the hit multipled by its 
 # identity to the reference is at least this length.
 MinContigLength=40
 # A contig will be split/cut if it has multiple blast hits. After alignment to
@@ -58,9 +58,28 @@ MinContigFragmentLength=10
 # trimming off.
 TrimToKnownGenome=true
 
-# Blast's "Word size for wordfinder algorithm" when blasting contigs against
-# references.
-BlastWordSize=17
+# Different blast 'tasks' (modes) to try when blasting the contigs. We will run
+# each of the different tasks specified here (separated by whitespace) and merge
+# the results. With this default, we try only -task megablast; if
+# 'megablast blastn' were specified instead, we would also try -task blastn (and
+# merge results).
+BlastTasks='megablast'
+
+# Options to give blast when blasting the contigs; run your blastn command with
+# -help to investigate possibilities.
+ContigBlastArgs="-max_target_seqs 1 -word_size 17"
+
+# When two blast hits for the same contig have a fractional overlap (defined as
+# the length of the part of the contig spanned by both hits divided by the
+# length of the shorter of the two hits) equal to or greater than this value,
+# we will merge them into a single hit. When the fractional overlap is less than
+# this value, the two hits will be kept separate, resulting in the contig being
+# split into two parts (one corresponding to each hit) to be aligned separately.
+# A value of 1 or greater means partially overlapping hits are never merged
+# (which is how shiver has always behaved). A value between 0 and 1 means they
+# may or may not be merged, depending on how strongly they overlap.
+# Pending imminent testing the current default is likely to be changed to 0.8.
+ContigMinBlastOverlapToMerge='2'
 
 # If you have a more recent mafft installation that includes the --addfragments
 # option, we will use both --addfragments and --add to align the contigs to the
@@ -85,7 +104,7 @@ NumThreadsTrimmomatic=1
 # Shall we trim exact matches to PCR primers from the end of reads using fastaq?
 TrimReadsForPrimers=true
 # Shall we also trim matches to the PCR primers that differ by a single base
-# change?
+# change? (This slows down the trimming step a lot.)
 TrimPrimerWithOneSNP=false
 
 # Shall we clean (remove read pairs that look like contaminants)?
@@ -104,7 +123,7 @@ mapper="smalt"
 # A summary of the mapping options used below:
 # -x means a read and its mate are mapped independently (not constraining them
 # to be close), -y sets the minimum fraction of identical nucleotides a read
-# must have to its reference before it is considered mapped, -j is the minimum
+# must have to its reference before it is considered mapped, -j is the minimum 
 # insert size and -i the maximum insert size: outside of this range, the read
 # pair is still mapped, but flagged as improperly paired.
 smaltIndexOptions="-k 15 -s 3"
@@ -142,11 +161,20 @@ bwaOptions='-v 2'
 samtoolsReadFlags='-f 3 -F 4'
 
 # See http://www.htslib.org/doc/samtools.html for a description of samtools
-# mpileup options. Those used below mean that the minimum of the base quality
-# the 'BAQ' quantity (see http://samtools.sourceforge.net/mpileup.shtml for an
-# explanation) must be at least 5, and only the first 1000000 reads mapped to
-# each point will be considered (NB a limit must be provided; the default is
-# 250).
+# mpileup options. Those used below mean that: the base alignment quality ('BAQ')
+# calculation (described at https://dx.doi.org/10.1093%2Fbioinformatics%2Fbtr076)
+# is turned off, as seems to be appropriate for HIV
+# (https://tinyurl.com/noBAQnoCry); the minimum quality for a base to be
+# retained is 5 (for backward/historical consistency), and only the first
+# 1000000 reads mapped to each point will be considered (NB a limit must be
+# provided; the default is 250).
+# Important note for data with overlapping read pairs: samtools mpileup avoids
+# double counting sequence in the overlap of a read pair by setting the quality
+# of all bases in the overlap to zero, for one of the two reads in the pair; 
+# then with any value of --min-BQ strictly greater than zero, these bases are
+# effectively deleted, such that the overlap sequence is counted only once.
+# If you set --min-BQ equal to zero, these bases will be counted (which is
+# generally undesirable).
 mpileupOptions='--min-BQ 5 --max-depth 1000000'
 
 # Parameters for calling the consensus base at each position:
@@ -170,7 +198,7 @@ MinBaseFrac=-1
 # keep only one pair and discard the rest? This can cause loss of diversity in
 # the reads due to true biological variation as well sequencing error. We
 # suggest you use this only if you understand duplication in your sequencing
-# data...
+# data... 
 deduplicate=false
 # Desired command (note that MarkDuplicatesWithMateCigar exists, which may be
 # better, however it still seems to have beta status; also note that you can
@@ -179,14 +207,14 @@ deduplicate=false
 # or the associated shiver commands will break):
 DeduplicationCommand="picard MarkDuplicates"
 
-# Shall we remap to the consensus? (For remapping, gaps in coverage in the
+# Shall we remap to the consensus? (For remapping, gaps in coverage in the 
 # consensus will filled in by the corresponding part of the orginal reference,
 # and ambiguity codes will simplified to just one of the bases they represent.
-# Because of this, if remapping to the consensus, you are strongly advised to
+# Because of this, if remapping to the consensus, you are strongly advised to 
 # set the MinBaseFrac parameter above to any negative value.)
 remap=true
 
-# Shall we map contaminant reads to the reference (separately), to see which
+# Shall we map contaminant reads to the reference (separately), to see which 
 # reads would have contaminanted our final bam file had they not been removed?
 MapContaminantReads=false
 
@@ -201,7 +229,7 @@ GiveHXB2coords=false
 # Shall we align the contigs to the consensus, for comparison?
 AlignContigsToConsensus=true
 
-# With the default value of false, the reads in their state just before mapping
+# With the default value of false, the reads in their state just before mapping 
 # (after any trimming of primers or adapters or low-quality bases, and after
 # removal of suspected contaminant reads) will have 'temp_' prepended to their
 # filenames so that they removed by the "rm temp*" command that you probably
@@ -223,6 +251,7 @@ BaseFreqsWHXB2Suffix='_BaseFreqs_WithHXB2.csv'
 InsertSizeCountsSuffix='_InsertSizeCounts.csv'
 CoordsDictSuffix='_coords.csv'
 BlastSuffix='.blast'
+MergedBlastSuffix='_MergedHits.blast'
 ReadsPreMapping1Suffix='_PreMapping_1.fastq'
 ReadsPreMapping2Suffix='_PreMapping_2.fastq'
 GlobalAlnSuffix='_ForGlobalAln.fasta'
@@ -281,3 +310,4 @@ SamtoolsSortFile='temp_SamtoolsSortFile'
 RefWHXB2unaln='temp_RefWHXB2unaln.fasta'
 RefWHXB2aln='temp_RefWHXB2aln.fasta'
 ContigsNoShortOnes='temp_contigs_NoShortOnes.fasta'
+DiscardedContigNames='temp_DiscardedContigNames.txt'
