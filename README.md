@@ -19,7 +19,7 @@ This pipeline was built on the snakemake workflow management system (Koster and 
 
 # Conda
 
-Create a `conda` and install the dependencies
+Create a `conda` environment and install the dependencies
 
 ```
 conda create -n vgea
