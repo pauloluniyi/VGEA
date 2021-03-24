@@ -1,0 +1,3 @@
+Reference_alignment: MyRefAlignment.fasta
+Adapters: MyAdapters.fasta
+Primers: MyPrimers.fasta

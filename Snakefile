@@ -1,6 +1,7 @@
 IDS, = glob_wildcards("{id}.bam")
+
 wfbasedir = workflow.basedir
-configfile: "{wfbasedir}/config.yaml"
+configfile: workflow.basedir + "/config.yaml"
 
 rule all:
  input:
@@ -15,8 +16,6 @@ rule all:
   ref_seqs = expand(["{id}_ref.fasta"], id=IDS),
   base_freqs = expand(["{id}_BaseFreqs.csv"], id=IDS),
   base_freqs_global_aln = expand(["{id}_BaseFreqs_ForGlobalAln.csv"], id=IDS),
-  min_cov = expand(["{id}_MinCov_X_Y.fasta"], id=IDS),
-  min_cov_global_aln = expand(["{id}_MinCov_X_Y_ForGlobalAln.fasta"], id=IDS),
   coords = expand(["{id}_coords.csv"], id=IDS),
   insert_size_dist = expand(["{id}_InsertSizeCounts.csv"], id=IDS)
 
@@ -47,9 +46,9 @@ rule assembly:
 rule shiver_init:
  message: "Shiver initialization"
  input:
-  Reference_alignment = "MyRefAlignment.fasta",
-  Adapters = "MyAdapters.fasta",
-  Primers = "MyPrimers.fasta"
+  Reference_alignment = config['Reference_alignment'],
+  Adapters = config['Adapters'],
+  Primers = config['Primers']
  output:
   initialization_directory = directory("MyInitDir")
  conda:
@@ -83,12 +82,9 @@ rule map:
   forward_read = rules.bamtoFastq.output.forward_read,
   reverse_read = rules.bamtoFastq.output.reverse_read
  output:
-  bam_file = "{id}.bam",
   ref_seqs = "{id}_ref.fasta",
   base_freqs = "{id}_BaseFreqs.csv",
   base_freqs_global_aln = "{id}_BaseFreqs_ForGlobalAln.csv",
-  min_cov = "{id}_MinCov_X_Y.fasta",
-  min_cov_global_aln = "{id}_MinCov_X_Y_ForGlobalAln.fasta",
   coords = "{id}_coords.csv",
   insert_size_dist = "{id}_InsertSizeCounts.csv"
  conda:
