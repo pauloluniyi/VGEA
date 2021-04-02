@@ -118,8 +118,8 @@ rule map:
    gene_features = config['quast_genefeatures.txt']
   output:
    quast_results = directory("quast_results")
-   conda:
-    "vgea.yml"
-   shell:
-    "python quast.py -r {input[1]} -g {input[2]} {input[0]}
+  conda:
+   "vgea.yml"
+  shell:
+   "python quast.py -r {input[1]} -g {input[2]} {input[0]}
    
