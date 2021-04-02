@@ -110,7 +110,6 @@ rule map:
   
  #934 in the shell of rule map should be changed to the sample ID
 
-  
  rule assembly_assessment/evaluation
   message: "Evaluate the quality of genome assembly"
   input:
