@@ -1,10 +1,12 @@
-IDS, = glob_wildcards("{id}.bam")
+IDS, = glob_wildcards("{id}_1.fastq"),
+IDS, = glob_wildcards("{id}_2.fastq")
 
 wfbasedir = workflow.basedir
 configfile: workflow.basedir + "/config.yaml"
 
 rule all:
  input:
+  ubam_file = expand(["{id}.bam"], id=IDS),
   forward_reads = expand(["{id}_1.fastq"], id=IDS),
   reverse_reads = expand(["{id}_2.fastq"], id=IDS),
   contigs = expand(["{id}_iva"], id=IDS),
@@ -17,8 +19,21 @@ rule all:
   base_freqs = expand(["{id}_BaseFreqs.csv"], id=IDS),
   base_freqs_global_aln = expand(["{id}_BaseFreqs_ForGlobalAln.csv"], id=IDS),
   coords = expand(["{id}_coords.csv"], id=IDS),
-  insert_size_dist = expand(["{id}_InsertSizeCounts.csv"], id=IDS)
+  insert_size_dist = expand(["{id}_InsertSizeCounts.csv"], id=IDS),
+  quast_results = directory("quast_results")
 
+rule fastq2ubams:
+ message: "Converting fastq file(s) to unalligned BAM files"
+ input:
+  read_1 = expand(["{id}_1.fastq"], id=IDS),
+  read_2 = expand(["{id}_2.fastq"], id=IDS)
+ output:
+  ubam_file = "{id}.bam"
+ conda:
+  "vgea.yml"
+ shell:
+  "java -Xmx8G -jar picard.jar FastqToSam {input[1]} {input[2]} {output}
+     
 rule bamtoFastq:
  message: "Converting BAM file into fastq files of forward and reverse reads"
  input:
@@ -92,5 +107,20 @@ rule map:
  shell:
   "shiver_map_reads.sh {input[0]} {wfbasedir}/config.sh {input[1]}/contigs.fasta 934 \
  {input[2]} {input[3]} {input[4]} {input[5]}"
+  
+ #934 in the shell of rule map should be changed to the sample ID
 
-#934 in the shell of rule map should be changed to the sample ID
+  
+ rule assembly_assessment/evaluation
+  message: "Evaluate the quality of genome assembly"
+  input:
+   consensus_genome = "{id}_remap_consensus_MinCov_X_Y.fasta"
+   quast_ref_genome = config['quast_refseq'],
+   gene_features = config['quast_genefeatures']
+  output:
+   quast_results = directory("quast_results")
+   conda:
+    "vgea.yml"
+   shell:
+    "python quast.py -r {input[1]} -g {input[2]} {input[0]}
+   
