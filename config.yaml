@@ -1,3 +1,5 @@
 Reference_alignment: MyRefAlignment.fasta
 Adapters: MyAdapters.fasta
 Primers: MyPrimers.fasta
+quast_ref_genome: quast_refseq
+gene_features: quast_genefeatures
