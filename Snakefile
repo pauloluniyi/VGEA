@@ -114,8 +114,8 @@ rule map:
   message: "Evaluate the quality of genome assembly"
   input:
    consensus_genome = "{id}_remap_consensus_MinCov_X_Y.fasta",
-   quast_ref_genome = config['quast_refseq'],
-   gene_features = config['quast_genefeatures']
+   quast_ref_genome = config['quast_refseq.fasta'],
+   gene_features = config['quast_genefeatures.txt']
   output:
    quast_results = directory("quast_results")
    conda:
