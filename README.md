@@ -57,4 +57,14 @@ snakemake -d /workingdir/
 
 The location of the reference, primer and adapter fasta files for **shiver** and the reference and gene features files for **quast** can be controlled by adjusting the `config.yaml` in the VGEA working directory.
 
+# Singularity
 
+Alternatively, users can run the entire VGEA pipeline with all dependencies installed from the singularity container.
+
+To install Singularity: See https://www.sylabs.io/docs/ for instructions to install Singularity.
+
+* Building the container
+
+If you are the administrator on your machine, you can build a local image of the VGEA container using the Singularity recipe file provided:
+
+sudo singularity build vgea.simg Singularity
