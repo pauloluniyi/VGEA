@@ -114,7 +114,7 @@ rule map:
  rule assembly_assessment/evaluation
   message: "Evaluate the quality of genome assembly"
   input:
-   consensus_genome = "{id}_remap_consensus_MinCov_X_Y.fasta"
+   consensus_genome = "{id}_remap_consensus_MinCov_X_Y.fasta",
    quast_ref_genome = config['quast_refseq'],
    gene_features = config['quast_genefeatures']
   output:
