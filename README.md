@@ -101,3 +101,8 @@ To install Singularity: See https://www.sylabs.io/docs/ for instructions to inst
 If you are the administrator on your machine, you can build a local image of the VGEA container using the Singularity recipe file provided:
 
 sudo singularity build vgea.simg Singularity
+
+# Contributions
+
+- Paul Eniola Oluniyi
+- Gerry Tonkin-Hill (https://gtonkinhill.github.io/)
