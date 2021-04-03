@@ -10,7 +10,7 @@ Include: bash vim less man-db apt-utils tzdata
 
 %labels
 
-    AUTHOR Paul Oluniyi - oluniyip@run.edu.ng
+    AUTHOR - Paul Eniola Oluniyi - pauleniolaoluniyi@gmail.com
     PhD researcher at ACEGID, Redeemer's University
     Version - v1.0
 
@@ -18,7 +18,8 @@ Include: bash vim less man-db apt-utils tzdata
 
     # make sure the "pipeline/" folder exists
     mkdir -p ${SINGULARITY_ROOTFS}/pipeline
-    # make sure the "/data" folder exists
+
+    # make sure the "/data" folder exists and in this folder, place your input files
     mkdir ${SINGULARITY_ROOTFS}/data
 
 %environment
@@ -67,7 +68,12 @@ Include: bash vim less man-db apt-utils tzdata
     fi
     # set anaconda path
     export PATH="/usr/local/anaconda/bin:$PATH"
-
+    
+    # Install Python2
+    conda install -c anaconda python2
+    
+    # Install Python3
+    conda install -c anaconda python3
 
     # Install snakemake
     conda install -c bioconda -c conda-forge snakemake
@@ -108,6 +114,15 @@ Include: bash vim less man-db apt-utils tzdata
 
     # Install kmc
     conda install -c bioconda kmc
+    
+    # Install Picard
+    conda install -c bioconda picard
+    
+    # Install shiver
+    conda install -c bioconda shiver
+    
+    # Install quast
+    conda install -c bioconda quast
 
     # Install iva
     conda install -c bioconda iva
@@ -115,31 +130,23 @@ Include: bash vim less man-db apt-utils tzdata
     # Install java
     yes | apt-get install default-jdk
 
-    # Install Python2
-    yes | apt install python-pip
-    yes | apt install python2.7
-
-    # Add the pipeline scripts to the $PATH and make sure they are executable
-    chmod +x /pipeline/scripts/*.sh
-    chmod +x /pipeline/scripts/*.jar
-    chmod +x /pipeline/scripts/tools/*.py
-    chmod +x /pipeline/scripts/tools/*.pyc
-    echo 'export PATH=$PATH:/pipeline/scripts' >> $SINGULARITY_ENVIRONMENT
-    echo 'export PATH=$PATH:/pipeline/scripts/tools' >> $SINGULARITY_ENVIRONMENT
-
     # add read/write access to data folder
     chmod -R o+rwx /data
 
 %files
 
-    # Copy test data files available at (https://drive.google.com/drive/folders/1Z-kMWj9fOEEu0lFjw_F4EBLl73JqklLE?usp=sharing)
-    934.bam /data
+    # Copy data files available
+    {id}_1.fastq /data
+    {id}_2.fastq /data
     MyRefAlignment.fasta /data
     MyAdapters.fasta /data
     MyPrimers.fasta /data
+    quast_refseq.fasta /data
+    quast_genefeatures.txt /data
+
 
     # Copy pipeline scripts
-    scripts/ /pipeline
+    
     Snakefile /pipeline
 
 %runscript
