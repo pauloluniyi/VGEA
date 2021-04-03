@@ -135,7 +135,7 @@ Include: bash vim less man-db apt-utils tzdata
 
 %files
 
-    # Copy data files available
+    # Copy input files
     {id}_1.fastq /data
     {id}_2.fastq /data
     MyRefAlignment.fasta /data
