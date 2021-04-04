@@ -1,5 +1,5 @@
-IDS, = glob_wildcards("{id}_1.fastq"),
-IDS, = glob_wildcards("{id}_2.fastq")
+IDS, = glob_wildcards("{id}_R1.fastq"),
+IDS, = glob_wildcards("{id}_R2.fastq")
 
 wfbasedir = workflow.basedir
 configfile: workflow.basedir + "/config.yaml"
@@ -22,22 +22,43 @@ rule all:
   insert_size_dist = expand(["{id}_InsertSizeCounts.csv"], id=IDS),
   quast_results = directory("quast_results")
 
-rule fastq2ubams:
- message: "Converting fastq file(s) to unalligned BAM files"
+rule indexing:
+ message: "Indexing the human reference genome"
  input:
-  read_1 = expand(["{id}_1.fastq"], id=IDS),
-  read_2 = expand(["{id}_2.fastq"], id=IDS)
- output:
-  ubam_file = "{id}.bam"
+  human_ref_genome = config['hg19.fasta']
  conda:
   "vgea.yml"
  shell:
-  "java -Xmx8G -jar picard.jar FastqToSam {input[1]} {input[2]} {output}
-     
+  "bwa index {input}"
+  
+rule map_to_human_genome:
+ message: "Mapping reads to the human genome to remove human contaminants"
+ input:
+  reads_1 = "{id}_R1.fastq",
+  reads_2 = "{id}_R2.fastq",
+  human_ref_genome = config['hg19.fasta']
+ output:
+  mapped_bam = "{id}.sam"
+ conda:
+  "vgea.yml"
+ shell:
+  "bwa mem {input[2]} {input[0]} {input[1]} > {output}
+
+rule extract_unmapped_reads:
+ message: "Extracting unmapped reads from bam file"
+ input:
+  mapped_reads = rules.map_to_human_genome.output.mapped_bam
+ output:
+  unmapped_bam = "{id}.bam"
+ conda:
+  "vgea.yml"
+ shell:
+  "samtools view -b -f12 {input} > {output}
+  
 rule bamtoFastq:
  message: "Converting BAM file into fastq files of forward and reverse reads"
  input:
-  expand(["{id}.bam"], id=IDS)
+  unmapped_bam_file = rules.extract_unmapped_reads.output.unmapped_bam
  output:
   forward_read = "{id}_1.fastq",
   reverse_read = "{id}_2.fastq"
