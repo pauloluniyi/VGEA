@@ -4,7 +4,7 @@ VGEA (Viral Genomes Easily Analyzed) is an RNA viral assembly toolkit.
 VGEA was developed to aid in the analysis of next generation sequencing data. Users can do the following with this pipeline:
 
 * Align paired-end sequencing reads to the human reference genome.
-* Extract unmapped/aligned reads.
+* Extract unmapped/unaligned reads.
 * Split bam files into forward and reverse reads. 
 * Carry out de novo assembly of forward and reverse reads to generate contigs.
 * Pre-process reads for quality and contamination. 
