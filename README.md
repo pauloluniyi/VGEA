@@ -3,7 +3,8 @@ VGEA (Viral Genomes Easily Analyzed) is an RNA viral assembly toolkit.
 
 VGEA was developed to aid in the analysis of next generation sequencing data. Users can do the following with this pipeline:
 
-* Merge fastq files into unaligned bam files.
+* Align paired-end sequencing reads to the human reference genome.
+* Extract unmapped/aligned reads.
 * Split bam files into forward and reverse reads. 
 * Carry out de novo assembly of forward and reverse reads to generate contigs.
 * Pre-process reads for quality and contamination. 
@@ -15,14 +16,14 @@ Dependencies:
 The VGEA pipeline requires the following dependencies:
 
 * Python 3 (www.python.org)
-* Picard (https://github.com/broadinstitute/picard)
+* BWA (Li and Durbin, 2009)
 * Snakemake (Köster et al., 2012)
 * Samtools (Li et al., 2009)
 * IVA (Hunt et al., 2015)
 * Shiver (Wymant et al., 2018)
 * Quast (Gurevich et al., 2013)
 
-VGEA was built on the Snakemake workflow management system and utilizes existing tools for each step: **picard**(https://github.com/broadinstitute/picard) for converting fastq files to a bam file, **samtools** (Li et al., 2009) for splitting files, **iva** (Hunt et al., 2015) for de novo assembly to generate contigs, **shiver** (Wymant et al., 2018) to pre-process reads for quality and contamination, then map to a reference tailored to the sample using corrected contigs supplemented with the user’s choice of existing reference sequences and **quast** (Gurevich et al., 2013) to evaluate/assess the quality of genome assemblies.
+VGEA was built on the Snakemake workflow management system and utilizes existing tools for each step: **bwa** (Li and Durbin, 2009) for mapping sequencing reads to the human reference genome, **samtools** (Li et al., 2009) for extracting unmapped reads and also for splitting bam files into fastq files, **iva** (Hunt et al., 2015) for de novo assembly to generate contigs, **shiver** (Wymant et al., 2018) to pre-process reads for quality and contamination, then map to a reference tailored to the sample using corrected contigs supplemented with the user’s choice of existing reference sequences and **quast** (Gurevich et al., 2013) to evaluate/assess the quality of genome assemblies.
 
 ## Quick start
 
@@ -88,7 +89,7 @@ Run the snakemake pipeline assuming the input fastq files are in `/workingdir/`
 snakemake -d /workingdir/
 ```
 
-The location of the reference, primer and adapter fasta files for **shiver** and the reference and gene features files for **quast** can be controlled by adjusting the `config.yaml` in the VGEA working directory.
+The location of the human reference genome, the reference, primer and adapter fasta files for **shiver** and the reference and gene features files for **quast** can be controlled by adjusting the `config.yaml` in the VGEA working directory.
 
 # Singularity
 
