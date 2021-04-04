@@ -6,7 +6,8 @@ configfile: workflow.basedir + "/config.yaml"
 
 rule all:
  input:
-  ubam_file = expand(["{id}.bam"], id=IDS),
+  mapped_bam = expand(["{id}.sam", id=IDS),
+  unmapped_bam = expand(["{id}.bam", id=IDS),
   forward_reads = expand(["{id}_1.fastq"], id=IDS),
   reverse_reads = expand(["{id}_2.fastq"], id=IDS),
   contigs = expand(["{id}_iva"], id=IDS),
