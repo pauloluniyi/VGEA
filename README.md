@@ -70,7 +70,7 @@ Create a `conda` environment and install the dependencies
 ```
 conda create -n vgea
 conda activate vgea
-conda install -c anaconda python3
+conda install -c anaconda python
 conda install -c bioconda bwa
 conda install -c bioconda samtools
 conda install -c bioconda iva
