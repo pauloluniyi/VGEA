@@ -15,9 +15,9 @@ Dependencies:
 
 The VGEA pipeline requires the following dependencies:
 
-* Python 3 (www.python.org)
-* BWA (Li and Durbin, 2009)
+
 * Snakemake (Köster et al., 2012)
+* BWA (Li and Durbin, 2009)
 * Samtools (Li et al., 2009)
 * IVA (Hunt et al., 2015)
 * Shiver (Wymant et al., 2018)
@@ -70,7 +70,6 @@ Create a `conda` environment and install the dependencies
 ```
 conda create -n vgea
 conda activate vgea
-conda install -c anaconda python
 conda install -c bioconda bwa
 conda install -c bioconda samtools
 conda install -c bioconda iva
