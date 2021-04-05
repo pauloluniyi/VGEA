@@ -87,8 +87,9 @@ git clone git@github.com:pauloluniyi/VGEA.git
 Run the snakemake pipeline assuming the input fastq files are in `/workingdir/`
 
 ```
-snakemake -d /workingdir/
+snakemake --cores n -d /workingdir/
 ```
+n = number of cores
 
 The location of the human reference genome, the reference, primer and adapter fasta files for **shiver** and the reference and gene features files for **quast** can be controlled by adjusting the `config.yaml` in the VGEA working directory.
 
