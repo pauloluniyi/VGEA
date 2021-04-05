@@ -21,6 +21,7 @@ rule all:
   base_freqs_global_aln = expand(["{id}_BaseFreqs_ForGlobalAln.csv"], id=IDS),
   coords = expand(["{id}_coords.csv"], id=IDS),
   insert_size_dist = expand(["{id}_InsertSizeCounts.csv"], id=IDS),
+  consensus_genome = expand(["{id}_remap_consensus_MinCov_10_30.fasta"], id=IDS),                       
   quast_results = directory("quast_results")
 
 rule indexing:
@@ -109,7 +110,8 @@ rule map:
   base_freqs = "{id}_BaseFreqs.csv",
   base_freqs_global_aln = "{id}_BaseFreqs_ForGlobalAln.csv",
   coords = "{id}_coords.csv",
-  insert_size_dist = "{id}_InsertSizeCounts.csv"
+  insert_size_dist = "{id}_InsertSizeCounts.csv",
+  consensus_genome = "{id}_remap_consensus_MinCov_10_30.fasta"
  shell:
   "shiver_map_reads.sh {input[0]} {wfbasedir}/config.sh {input[1]}/contigs.fasta 934 \
  {input[2]} {input[3]} {input[4]} {input[5]}"
