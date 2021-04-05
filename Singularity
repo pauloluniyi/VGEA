@@ -136,8 +136,9 @@ Include: bash vim less man-db apt-utils tzdata
 %files
 
     # Copy input files
-    {id}_1.fastq /data
-    {id}_2.fastq /data
+    {id}_R1.fastq /data
+    {id}_R2.fastq /data
+    human_ref_genome.fasta /data
     MyRefAlignment.fasta /data
     MyAdapters.fasta /data
     MyPrimers.fasta /data
