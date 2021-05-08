@@ -6,8 +6,8 @@ configfile: workflow.basedir + "/config.yaml"
 
 rule all:
  input:
-  mapped_bam = expand(["{id}.sam", id=IDS),
-  unmapped_bam = expand(["{id}.bam", id=IDS),
+  mapped_bam = expand(["{id}.sam"], id=IDS),
+  unmapped_bam = expand(["{id}.bam"], id=IDS),
   forward_reads = expand(["{id}_1.fastq"], id=IDS),
   reverse_reads = expand(["{id}_2.fastq"], id=IDS),
   contigs = expand(["{id}_iva"], id=IDS),
@@ -40,7 +40,7 @@ rule map_to_human_genome:
  output:
   mapped_bam = "{id}.sam"
  shell:
-  "bwa mem {input[2]} {input[0]} {input[1]} > {output}
+  "bwa mem {input[2]} {input[0]} {input[1]} > {output}"
 
 rule extract_unmapped_reads:
  message: "Extracting unmapped reads from bam file"
@@ -49,7 +49,7 @@ rule extract_unmapped_reads:
  output:
   unmapped_bam = "{id}.bam"
  shell:
-  "samtools view -b -f12 {input} > {output}
+  "samtools view -b -f12 {input} > {output}"
   
 rule bamtoFastq:
  message: "Converting BAM file into fastq files of forward and reverse reads"
@@ -118,7 +118,7 @@ rule map:
   
  #934 in the shell of rule map should be changed to the sample ID
 
- rule assembly_assessment/evaluation
+rule assembly_assessment:
   message: "Evaluate the quality of genome assembly"
   input:
    consensus_genome = "{id}_remap_consensus_MinCov_10_30.fasta",
@@ -127,5 +127,5 @@ rule map:
   output:
    quast_results = directory("quast_results")
   shell:
-   "python quast.py -r {input[1]} -g {input[2]} {input[0]}
+   "python quast.py -r {input[1]} -g {input[2]} {input[0]}"
    
