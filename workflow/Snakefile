@@ -1,8 +1,7 @@
 from snakemake.utils import validate
 import pandas as pd
 
-wfbasedir = workflow.basedir
-configfile: workflow.basedir + "/config.yaml"
+configfile: "config/config.yaml"
 
 ##### complete species resource paths if following files defined with them #####
 for config_resource in ['viral_reference_genome', 
@@ -103,20 +102,21 @@ rule assembly:
   contigs = directory("results/{id}/{id}_iva")
  threads: 8
  shell:
-  "iva --reads_fwd {input.forward_read} -reads_rev {input.reverse_read} --threads {threads} {output}"
+  "iva --reads_fwd {input.forward_read} --reads_rev {input.reverse_read} --threads {threads} {output}"
 
 rule shiver_init:
  message: "Shiver initialization"
  conda: "envs/shiver.yaml"
  container: "quay.io/biocontainers/shiver:1.3.5--py27_0"
  input:
-  Reference_alignment = config['viral_reference_genome'],
-  Adapters = config['viral_sequencing_adapters'],
-  Primers = config['viral_sequencing_primers']
+  reference_alignment = config['viral_reference_genome'],
+  adapters = config['viral_sequencing_adapters'],
+  primers = config['viral_sequencing_primers'],
+  shiver_config = config['shiver_config_file']
  output:
   initialization_directory = directory("results/{id}/{id}_shiver_init_dir")
  shell:
-   "shiver_init.sh {output} {wfbasedir}/config.sh {input[0]} {input[1]} {input[2]}"
+   "shiver_init.sh {output} {input.shiver_config} {input[0]} {input[1]} {input[2]}"
 
 rule align_contigs:
  message: "Aligning contigs"
@@ -124,13 +124,14 @@ rule align_contigs:
  container: "quay.io/biocontainers/shiver:1.3.5--py27_0"
  input:
   initialization_directory = rules.shiver_init.output.initialization_directory,
-  contigs_file = rules.assembly.output.contigs
+  contigs_file = rules.assembly.output.contigs,
+  shiver_config = config['shiver_config_file']
  output:
   blast_hits = "results/{id}/{id}.blast",
   aligned_contigs_raw = "results/{id}/{id}_raw_wRefs.fasta",
   aligned_contigs_cut = "results/{id}/{id}_cut_wRefs.fasta"
  shell:
-  "shiver_align_contigs.sh {input[0]} {wfbasedir}/config.sh {input[1]}/contigs.fasta 934"
+  "shiver_align_contigs.sh {input[0]} {input.shiver_config} {input[1]}/contigs.fasta 934"
 
 #934 in the shell of rule align_contigs should be changed to the sample ID
 
@@ -140,11 +141,12 @@ rule map:
  container: "quay.io/biocontainers/shiver:1.3.5--py27_0"
  input:
   initialization_directory = rules.shiver_init.output.initialization_directory,
-  contigs_file = rules.assembly.output.contigs,
+  contigs = rules.assembly.output.contigs,
   blast_hits = rules.align_contigs.output.blast_hits,
   aligned_contigs_cut = rules.align_contigs.output.aligned_contigs_cut,
   forward_read = rules.bamtoFastq.output.forward_read,
-  reverse_read = rules.bamtoFastq.output.reverse_read
+  reverse_read = rules.bamtoFastq.output.reverse_read,
+  shiver_config = config['shiver_config_file']
  output:
   ref_seqs = "results/{id}/{id}_ref.fasta",
   base_freqs = "results/{id}/{id}_BaseFreqs.csv",
@@ -153,8 +155,7 @@ rule map:
   insert_size_dist = "results/{id}/{id}_InsertSizeCounts.csv",
   consensus_genome = "results/{id}/{id}_remap_consensus_MinCov_10_30.fasta"
  shell:
-  "shiver_map_reads.sh {input} {wfbasedir}/config.sh {input[1]}/contigs.fasta 934 \
- {input[2]} {input[3]} {input[4]} {input[5]}"
+  "shiver_map_reads.sh {input.initialization_directory} {input.shiver_config} {input.contigs} {wildcards.id} {input.blast_hits} {input.aligned_contigs_cut} {input.forward_read} {input.reverse_read}"
   
  #934 in the shell of rule map should be changed to the sample ID
 
