@@ -45,6 +45,8 @@ rule all:
 
 rule indexing:
  message: "Indexing the human reference genome"
+ conda: "envs/read_processing.yaml"
+ container: "quay.io/biocontainers/bwa:0.7.17--h5bf99c6_8"
  input:
   human_ref_genome = config['human_reference_genome']
  output:
@@ -54,6 +56,8 @@ rule indexing:
   
 rule map_to_human_genome:
  message: "Mapping reads to the human genome to remove human contaminants"
+ conda: "envs/read_processing.yaml"
+ container: "quay.io/biocontainers/bwa:0.7.17--h5bf99c6_8"
  input:
   unpack(get_fastq),
   idx=rules.indexing.output,
@@ -67,6 +71,8 @@ rule map_to_human_genome:
 
 rule extract_unmapped_reads:
  message: "Extracting unmapped reads from bam file"
+ conda: "envs/read_processing.yaml"
+ container: "quay.io/biocontainers/samtools:1.12--h9aed4be_1"
  input:
   mapped_reads = rules.map_to_human_genome.output.mapped_bam
  output:
@@ -76,6 +82,8 @@ rule extract_unmapped_reads:
   
 rule bamtoFastq:
  message: "Converting BAM file into fastq files of forward and reverse reads"
+ conda: "envs/read_processing.yaml"
+ container: "quay.io/biocontainers/samtools:1.12--h9aed4be_1"
  input:
   unmapped_bam_file = rules.extract_unmapped_reads.output.unmapped_bam
  output:
@@ -86,6 +94,8 @@ rule bamtoFastq:
 
 rule assembly:
  message: "Assembly of forward and reverse reads"
+ conda: "envs/iva.yaml"
+ container: "quay.io/biocontainers/iva:1.0.11--py_0"
  input:
   forward_read = rules.bamtoFastq.output.forward_read,
   reverse_read = rules.bamtoFastq.output.reverse_read
@@ -95,10 +105,10 @@ rule assembly:
  shell:
   "iva --reads_fwd {input.forward_read} -reads_rev {input.reverse_read} --threads {threads} {output}"
 
-
-
 rule shiver_init:
  message: "Shiver initialization"
+ conda: "envs/shiver.yaml"
+ container: "quay.io/biocontainers/shiver:1.3.5--py27_0"
  input:
   Reference_alignment = config['viral_reference_genome'],
   Adapters = config['viral_sequencing_adapters'],
@@ -110,6 +120,8 @@ rule shiver_init:
 
 rule align_contigs:
  message: "Aligning contigs"
+ conda: "envs/shiver.yaml"
+ container: "quay.io/biocontainers/shiver:1.3.5--py27_0"
  input:
   initialization_directory = rules.shiver_init.output.initialization_directory,
   contigs_file = rules.assembly.output.contigs
@@ -124,6 +136,8 @@ rule align_contigs:
 
 rule map:
  message: "Mapping paired-end reads to reference genome"
+ conda: "envs/shiver.yaml"
+ container: "quay.io/biocontainers/shiver:1.3.5--py27_0"
  input:
   initialization_directory = rules.shiver_init.output.initialization_directory,
   contigs_file = rules.assembly.output.contigs,
@@ -146,6 +160,8 @@ rule map:
 
 rule assembly_assessment:
   message: "Evaluate the quality of genome assembly"
+  conda: "envs/qc.yaml"
+  container: "quay.io/biocontainers/quast:5.0.2--py36pl5262h30a8e3e_4"
   input:
    consensus_genome = "results/{id}/{id}_remap_consensus_MinCov_10_30.fasta",
    quast_ref_genome = config['viral_reference_genome'],

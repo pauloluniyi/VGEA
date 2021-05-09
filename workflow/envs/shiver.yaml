@@ -1,0 +1,7 @@
+name: shiver
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - shiver=1.3.5
