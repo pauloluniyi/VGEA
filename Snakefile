@@ -1,15 +1,26 @@
-IDS, = glob_wildcards("{id}_R1.fastq"),
-IDS, = glob_wildcards("{id}_R2.fastq")
+from snakemake.utils import validate
+import pandas as pd
 
 wfbasedir = workflow.basedir
 configfile: workflow.basedir + "/config.yaml"
 
-# complete species resource paths if following files defined with them
+##### complete species resource paths if following files defined with them #####
 for config_resource in ['viral_reference_genome', 
                         'viral_sequencing_adapters',
                         'viral_sequencing_primers',
                         'viral_reference_gene_features']:
     config[config_resource] = config[config_resource].format(viral_species=config['viral_species'])
+
+##### load sample sheets #####
+sample_table = pd.read_csv(config["sample_table"], sep="\t").set_index("id", drop=False)
+sample_table.index.names = ["id"]
+
+IDS = sorted(sample_table['id'].drop_duplicates().values)
+
+def get_fastq(wildcards):
+    """Get fastq files of given sample-unit."""
+    fastqs = sample_table.loc[wildcards.id, ["r1", "r2"]].dropna()
+    return {"r1": fastqs.r1, "r2": fastqs.r2}
 
 
 rule all:
@@ -30,25 +41,28 @@ rule all:
   coords = expand(["{id}_coords.csv"], id=IDS),
   insert_size_dist = expand(["{id}_InsertSizeCounts.csv"], id=IDS),
   consensus_genome = expand(["{id}_remap_consensus_MinCov_10_30.fasta"], id=IDS),                       
-  quast_results = directory("quast_results")
+  quast_results = expand(["{id}_quast_results"], id=IDS)
 
 rule indexing:
  message: "Indexing the human reference genome"
  input:
   human_ref_genome = config['human_reference_genome']
+ output:
+    multiext(config['human_reference_genome'], ".amb", ".ann", ".bwt", ".pac", ".sa"),
  shell:
   "bwa index {input}"
   
 rule map_to_human_genome:
  message: "Mapping reads to the human genome to remove human contaminants"
  input:
-  reads_1 = "{id}_R1.fastq",
-  reads_2 = "{id}_R2.fastq",
-  human_ref_genome = config['human_reference_genome']
+  unpack(get_fastq),
+  idx=rules.indexing.output,
  output:
   mapped_bam = "{id}.sam"
+ params:
+  index=lambda w, input: os.path.splitext(input.idx[0])[0]
  shell:
-  "bwa mem {input[2]} {input[0]} {input[1]} > {output}"
+  "bwa mem {params.index} {input.r1} {input.r2} > {output}"
 
 rule extract_unmapped_reads:
  message: "Extracting unmapped reads from bam file"
@@ -133,6 +147,6 @@ rule assembly_assessment:
    quast_ref_genome = config['viral_reference_genome'],
    gene_features = config['viral_reference_gene_features']
   output:
-   quast_results = directory("quast_results")
+   quast_results = directory("{id}_quast_results")
   shell:
-   "python quast.py -r {input[1]} -g {input[2]} {input[0]}"
+   "python quast.py -r {input[1]} -g {input[2]} -o {output.quast_results} {input[0]}"
