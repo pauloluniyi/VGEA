@@ -61,8 +61,9 @@ rule map_to_human_genome:
   mapped_bam = "results/{id}/{id}.sam"
  params:
   index=lambda w, input: os.path.splitext(input.idx[0])[0]
+ threads: 4
  shell:
-  "bwa mem {params.index} {input.r1} {input.r2} > {output}"
+  "bwa mem -t {threads} {params.index} {input.r1} {input.r2} > {output}"
 
 rule extract_unmapped_reads:
  message: "Extracting unmapped reads from bam file"
@@ -90,8 +91,9 @@ rule assembly:
   reverse_read = rules.bamtoFastq.output.reverse_read
  output:
   contigs = directory("results/{id}/{id}_iva")
+ threads: 8
  shell:
-  "iva --reads_fwd {input.forward_read} -reads_rev {input.reverse_read}"
+  "iva --reads_fwd {input.forward_read} -reads_rev {input.reverse_read} --threads {threads} {output}"
 
 
 
