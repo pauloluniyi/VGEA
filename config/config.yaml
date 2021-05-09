@@ -1,4 +1,5 @@
 sample_table: "resources/test/sample_table.tsv"
+shiver_config_file: "config/shiver_config.sh"
 human_reference_genome: "resources/GRCh38_latest_genomic.fna"
 viral_species: "SARS-CoV-2"
 viral_reference_genome: "resources/{viral_species}/MyRefAlignment.fasta"
