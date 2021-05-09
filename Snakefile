@@ -4,6 +4,14 @@ IDS, = glob_wildcards("{id}_R2.fastq")
 wfbasedir = workflow.basedir
 configfile: workflow.basedir + "/config.yaml"
 
+# complete species resource paths if following files defined with them
+for config_resource in ['viral_reference_genome', 
+                        'viral_sequencing_adapters',
+                        'viral_sequencing_primers',
+                        'viral_reference_gene_features']:
+    config[config_resource] = config[config_resource].format(viral_species=config['viral_species'])
+
+
 rule all:
  input:
   mapped_bam = expand(["{id}.sam"], id=IDS),
@@ -27,7 +35,7 @@ rule all:
 rule indexing:
  message: "Indexing the human reference genome"
  input:
-  human_ref_genome = config['hg19.fasta']
+  human_ref_genome = config['human_reference_genome']
  shell:
   "bwa index {input}"
   
@@ -36,7 +44,7 @@ rule map_to_human_genome:
  input:
   reads_1 = "{id}_R1.fastq",
   reads_2 = "{id}_R2.fastq",
-  human_ref_genome = config['hg19.fasta']
+  human_ref_genome = config['human_reference_genome']
  output:
   mapped_bam = "{id}.sam"
  shell:
@@ -74,9 +82,9 @@ rule assembly:
 rule shiver_init:
  message: "Shiver initialization"
  input:
-  Reference_alignment = config['Reference_alignment'],
-  Adapters = config['Adapters'],
-  Primers = config['Primers']
+  Reference_alignment = config['viral_reference_genome'],
+  Adapters = config['viral_sequencing_adapters'],
+  Primers = config['viral_sequencing_primers']
  output:
   initialization_directory = directory("MyInitDir")
  shell:
@@ -122,10 +130,9 @@ rule assembly_assessment:
   message: "Evaluate the quality of genome assembly"
   input:
    consensus_genome = "{id}_remap_consensus_MinCov_10_30.fasta",
-   quast_ref_genome = config['quast_refseq.fasta'],
-   gene_features = config['quast_genefeatures.txt']
+   quast_ref_genome = config['viral_reference_genome'],
+   gene_features = config['viral_reference_gene_features']
   output:
    quast_results = directory("quast_results")
   shell:
    "python quast.py -r {input[1]} -g {input[2]} {input[0]}"
-   
