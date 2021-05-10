@@ -3,6 +3,7 @@ include: "rules/read_processing.smk"
 include: "rules/assembly.smk"
 include: "rules/qc.smk"
 
+
 rule all:
- input:
-  quast_results = expand(["results/{id}/{id}_quast_results"], id=IDS)
+    input:
+        quast_results=expand(["results/{id}/{id}_quast_results"], id=IDS),
