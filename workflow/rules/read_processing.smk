@@ -4,6 +4,8 @@ rule indexing:
     conda:
         "../envs/read_processing.yaml"
     # container: "docker://quay.io/biocontainers/bwa:0.7.17--h5bf99c6_8"
+    log:
+        "results/logs/bwa_human_reference_index.log"
     input:
         human_ref_genome=config["human_reference_genome"],
     output:
@@ -20,6 +22,8 @@ rule map_to_human_genome:
     conda:
         "../envs/read_processing.yaml"
     # container: "docker://quay.io/biocontainers/bwa:0.7.17--h5bf99c6_8"
+    log:
+        "results/logs/{id}/{id}_bwa_human_contamination_map.log"
     input:
         unpack(get_fastq),
         idx=rules.indexing.output,
@@ -38,6 +42,8 @@ rule extract_unmapped_reads:
     conda:
         "../envs/read_processing.yaml"
     # container: "docker://quay.io/biocontainers/samtools:1.12--h9aed4be_1"
+    log:
+        "results/logs/{id}/{id}_samtools_extract_non_human.log"
     input:
         mapped_reads=rules.map_to_human_genome.output.mapped_bam,
     output:
@@ -52,10 +58,12 @@ rule bamtoFastq:
     conda:
         "../envs/read_processing.yaml"
     # container: "docker://quay.io/biocontainers/samtools:1.12--h9aed4be_1"
+    log:
+        "results/logs/{id}/{id}_bamtofastq.log"
     input:
         unmapped_bam_file=rules.extract_unmapped_reads.output.unmapped_bam,
     output:
         forward_read="results/{id}/{id}_1.fastq",
         reverse_read="results/{id}/{id}_2.fastq",
     shell:
-        "samtools fastq -N -1 {output[0]} -2 {output[1]} {input}"
+        "samtools fastq -N -1 {output.forward_read} -2 {output.reverse_read} {input}"

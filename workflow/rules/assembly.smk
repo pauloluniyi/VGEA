@@ -4,12 +4,14 @@ rule assembly:
     conda:
         "../envs/iva.yaml"
     # container: "docker://quay.io/biocontainers/iva:1.0.11--py_0"
+    threads: 8
+    log:
+        "results/logs/{id}/{id}_iva.log"
     input:
         forward_read=rules.bamtoFastq.output.forward_read,
         reverse_read=rules.bamtoFastq.output.reverse_read,
     output:
         contigs="results/{id}/{id}_iva/contigs.fasta",
-    threads: 8
     shell:
         "iva --reads_fwd {input.forward_read} --reads_rev {input.reverse_read} --threads {threads} {output}"
 
@@ -20,6 +22,8 @@ rule shiver_init:
     conda:
         "../envs/shiver.yaml"
     # container: "docker://quay.io/biocontainers/shiver:1.3.5--py27_0"
+    log:
+        "results/logs/{id}/{id}_shiver_init.log"
     input:
         reference_alignment=config["viral_reference_genome"],
         adapters=config["viral_sequencing_adapters"],
@@ -43,6 +47,8 @@ rule align_contigs:
     conda:
         "../envs/shiver.yaml"
     # container: "docker://quay.io/biocontainers/shiver:1.3.5--py27_0"
+    log:
+        "results/logs/{id}/{id}_shiver_align_contigs.log"
     input:
         initialization_directory=rules.shiver_init.output.initialization_directory,
         contigs_file=rules.assembly.output.contigs,
@@ -65,6 +71,8 @@ rule map:
     conda:
         "../envs/shiver.yaml"
     # container: "docker://quay.io/biocontainers/shiver:1.3.5--py27_0"
+    log:
+        "results/logs/{id}/{id}_shiver_map_reads.log"
     input:
         initialization_directory=rules.shiver_init.output.initialization_directory,
         contigs=rules.assembly.output.contigs,
