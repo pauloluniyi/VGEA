@@ -1,0 +1,11 @@
+##sequence-region NC_004296.1 1 3402
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=11620
+NC_004296.1	RefSeq	region	1	3402	.	+	.	ID=NC_004296.1:1..3402;Dbxref=taxon:11620;Name=S;gbkey=Src;genome=genomic;mol_type=genomic RNA;old-name=Lassa virus;segment=S;strain=Josiah
+NC_004296.1	RefSeq	repeat_region	1	19	.	+	.	ID=id-NC_004296.1:1..19;Note=5' conserved complimentary terminus;gbkey=repeat_region
+NC_004296.1	RefSeq	gene	101	1810	.	+	.	ID=gene-LASVsSgp1;Dbxref=GeneID:956584;Name=LASVsSgp1;gbkey=Gene;gene_biotype=protein_coding;locus_tag=LASVsSgp1
+NC_004296.1	RefSeq	CDS	101	1810	.	+	0	ID=cds-NP_694869.1;Parent=gene-LASVsSgp1;Dbxref=Genbank:NP_694869.1,GeneID:956584;Name=NP_694869.1;gbkey=CDS;locus_tag=LASVsSgp1;product=nucleoprotein;protein_id=NP_694869.1
+NC_004296.1	RefSeq	sequence_feature	1817	1857	.	+	.	ID=id-NC_004296.1:1817..1857;Note=hairpin intergenic region;gbkey=misc_feature
+NC_004296.1	RefSeq	gene	1872	3347	.	-	.	ID=gene-LASVsSgp2;Dbxref=GeneID:956585;Name=LASVsSgp2;gbkey=Gene;gene_biotype=protein_coding;locus_tag=LASVsSgp2
+NC_004296.1	RefSeq	CDS	1872	3347	.	-	0	ID=cds-NP_694870.1;Parent=gene-LASVsSgp2;Dbxref=Genbank:NP_694870.1,GeneID:956585;Name=NP_694870.1;gbkey=CDS;locus_tag=LASVsSgp2;product=glycoprotein;protein_id=NP_694870.1
+NC_004296.1	RefSeq	repeat_region	3383	3402	.	+	.	ID=id-NC_004296.1:3383..3402;Note=3' conserved complimentary terminus;gbkey=repeat_region
+
