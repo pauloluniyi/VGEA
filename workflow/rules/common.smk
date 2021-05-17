@@ -2,12 +2,10 @@ from snakemake.utils import validate
 import pandas as pd
 from pathlib import Path
 
-
 container: "docker://continuumio/miniconda3:4.4.10"
 
-
 configfile: "config/config.yaml"
-
+validate(config, schema="../schemas/config.schema.yaml")
 
 ##### complete species resource paths if following files defined with them #####
 for config_resource in config.keys():
@@ -19,13 +17,11 @@ for config_resource in config.keys():
         config[config_resource] = str(Path(config[config_resource]).resolve())
 
 ##### load sample sheets #####
-sample_table = pd.read_csv(config["sample_table"], sep="\t").set_index("id", drop=False)
-sample_table.index.names = ["id"]
-
-IDS = sorted(sample_table["id"].drop_duplicates().values)
-
+samples = pd.read_csv(config["sample_table"], sep="\t").set_index("id", drop=False)
+validate(samples, schema="../schemas/samples.schema.yaml")
+IDS = samples.index.values
 
 def get_fastq(wildcards):
-    """Get fastq files of given sample-unit."""
-    fastqs = sample_table.loc[wildcards.id, ["r1", "r2"]].dropna()
+    """Get fastq files of a given sample"""
+    fastqs = samples.loc[wildcards.id, ["r1", "r2"]].dropna()
     return {"r1": fastqs.r1, "r2": fastqs.r2}

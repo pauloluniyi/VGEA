@@ -3,7 +3,7 @@ include: "rules/read_processing.smk"
 include: "rules/assembly.smk"
 include: "rules/qc.smk"
 
-
 rule all:
     input:
-        quast_results=expand(["results/{id}/{id}_quast_results"], id=IDS),
+        multiqc_report="results/multiqc/multiqc_report.html",
+        genomes=expand(["results/{id}/{id}.shiver_assembly.fasta"], id=IDS)

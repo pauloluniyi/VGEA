@@ -64,7 +64,7 @@ BlastWordSize=17
 MafftTestingStrategy="MinAlnLength"
 
 # Shall we trim adapaters and low quality bases from reads, using trimmomatic?
-TrimReadsForAdaptersAndQual=true
+TrimReadsForAdaptersAndQual=false
 # The trimmomatic manual explains at length the parameters controlling read
 # trimming; the reader is referred to it for explanations of the following
 # variables and other options not used here:

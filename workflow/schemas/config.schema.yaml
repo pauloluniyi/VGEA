@@ -1,0 +1,46 @@
+$schema: "http://json-schema.org/draft-04/schema#"
+
+description: snakemake configuration file
+
+type: object
+
+# possible entries of the config file and which type they should be
+properties:
+  sample_table: 
+    type: string
+    description: "Path to a CSV containing sample metadata and paths to r1 and r2 fastq files (samplename,r1,r2)"
+  shiver_config_file: 
+    type: string
+    description: "Path to a valid shiver config file"
+    default: "config/shiver_default_config_1_3_5.sh"
+  human_reference_genome: 
+    type: string
+    description: "Path to fasta file containing human genome reference for decontamination"
+    default: "resources/GRCh38_latest_genomic.fna"
+  viral_species: 
+    type: string
+    description: "Viral species name for automating pre-installed references, valid: 'SARS-CoV-2', 'HIV-1', 'LASV-L', 'LASV-S'"
+  viral_reference_alignment:
+    type: string
+    description: "Path to an alignment of viral reference genomes for use by shiver"
+  viral_reference_genome: 
+    type: string
+    description: "Path to single reference viral genome for assembly evaluation with QUAST"
+  viral_reference_gene_features: 
+    type: string
+    description: "Path to valid GFF3 file containing gene features for supplied viral_reference_genome" 
+  viral_sequencing_adapters: 
+    type: string
+    description: "Path to fasta file containing sequencing adapters used"
+  viral_sequencing_primers: 
+    type: string
+    description: "Path to fasta file containing sequencing primers used"
+required:
+  - sample_table
+  - shiver_config_file
+  - human_reference_genome
+  - viral_reference_genome
+  - viral_reference_gene_features
+  - viral_reference_alignment
+  - viral_sequencing_adapters
+  - viral_sequencing_primers
