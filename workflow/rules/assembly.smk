@@ -126,5 +126,5 @@ rule tidy_shiver_output:
         "results/{id}/{id}.fasta"
     shell:
         """
-        seqtk seq -l0 {input} | head -n2 | sed '/>/!s/-//g' | sed 's/\\?/N/g' > {output} 2> {log}
+        seqtk seq -l0 {input} | head -n2 | sed 's/?/N/g' > {output} 2> {log}
         """

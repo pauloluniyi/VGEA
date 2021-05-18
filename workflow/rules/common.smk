@@ -2,7 +2,7 @@ from snakemake.utils import validate
 import pandas as pd
 from pathlib import Path
 
-container: "docker://continuumio/miniconda3:4.4.10"
+containerized: "docker://finlaymaguire/vgea:latest"
 
 configfile: "config/config.yaml"
 validate(config, schema="../schemas/config.schema.yaml")

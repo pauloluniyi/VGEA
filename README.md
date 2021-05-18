@@ -145,28 +145,24 @@ Where `$n` is the number of cores with which to execute the workflow and `$your_
 VGEA will output all results in the `results/` directory with a subfolder containing results for each sample and top-level folders collecting all log files, tool benchmarks, and an interactive multiQC html summary of results.
 
     results/
-    ├── benchmarks
-    ├── logs
-    │   ├── multiqc.log
-    │   ├── multiqc.tsv
-    │   ├── test1
-    │   └── test2
-    ├── multiqc
+    ├── benchmarks                  # all benchmark files with hardware usage for each sample
+    ├── logs                        # all log files for each rule and sample
+    ├── multiqc                     # multiqc summary of quast, fastp, and de-hosting results
     │   ├── multiqc_data
-    │   └── multiqc_report.html
-    ├── test1
-    │   ├── test1_1.fastq
+    │   └── multiqc_report.html     # the interactive multiqc report
+    ├── test1                       # all results for the sample "test1" 
+    │   ├── test1_1.fastq           # fastp trimmed and de-hosted reads for the sample 
     │   ├── test1_2.fastq
-    │   ├── test1.bam
-    │   ├── test1.fasta
-    │   ├── test1.fastp.html
-    │   ├── test1.fastp.json
-    │   ├── test1.flagstat
-    │   ├── test1_iva
-    │   ├── test1.quast_results
-    │   ├── test1_r1_trimmed.fq
-    │   ├── test1_r2_trimmed.fq
-    │   └── test1.sam
+    │   ├── test1.bam               # alignment against human reference 
+    │   ├── test1.fasta             # final cleaned assembly from IVA and shiver
+    │   ├── test1.fastp.html        # fastp report in html format
+    │   ├── test1.fastp.json        # fastp report in json format
+    │   ├── test1.flagstat          # dehosting mapping statistics
+    │   ├── test1_iva               # folder containing all IVA assembly files
+    │   ├── test1.quast_results     # folder containing all QUAST assembly assessment of test1.fast
+    │   ├── test1_r1_trimmed.fq     # fastp trimmed reads
+    │   ├── test1_r2_trimmed.fq     
+    │   └── test1.sam               # sam file containing all the reads that didn't map to the human reference
     └── test2
         ├── shiver
         ├── test2_1.fastq
@@ -182,17 +178,19 @@ VGEA will output all results in the `results/` directory with a subfolder contai
         ├── test2_r2_trimmed.fq
         └── test2.sam
 
-# Singularity
+## Containerized Singularity (Beta)
 
-Alternatively, users can run the entire VGEA pipeline with all dependencies installed from the singularity container.
+Alternatively, users can run the VGEA pipeline with all dependencies installed in a docker/singularity container.
 
-To install Singularity: See https://www.sylabs.io/docs/ for instructions to install Singularity.
+This requires singularity and snakemake to be installed on the system but in theory provides a more reproducible version of the conda environments (not fully tested compared to just conda).
 
-* Building the container
+See [here](https://www.sylabs.io/docs/) for instructions to install Singularity.
 
-If you are the administrator on your machine, you can build a local image of the VGEA container using the Singularity recipe file provided:
+Then the workflow can be run as normal with `--use-singularity` added e.g.,
 
-sudo singularity build vgea.simg Singularity
+```
+snakemake --use-conda --use-singularity --configfile .test/integration/test_config.yaml -j 1
+```
 
 ## Testing
 
