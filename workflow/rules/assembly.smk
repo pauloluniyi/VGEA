@@ -13,13 +13,12 @@ rule iva_assembly:
         forward_read=rules.generate_dehosted_fastq.output.forward_read,
         reverse_read=rules.generate_dehosted_fastq.output.reverse_read,
     output:
-        contigs="results/{id}/{id}_iva/contigs.fasta"
-    params:
-        output_folder="results/{id}/{id}_iva"
+        contigs="results/{id}/{id}_iva/contigs.fasta",
+        output_folder=directory("results/{id}/{id}_iva")
     shell:
         """
-        rm -rf {params.output_folder} #to prevent snakemake pre-making the folder
-        (iva --reads_fwd {input.forward_read} --reads_rev {input.reverse_read} --threads {threads} {params.output_folder}) > {log} 2>&1
+        rm -rf {output.output_folder} #to prevent snakemake pre-making the folder
+        (iva --reads_fwd {input.forward_read} --reads_rev {input.reverse_read} --threads {threads} {output.output_folder}) > {log} 2>&1
         """
 
 

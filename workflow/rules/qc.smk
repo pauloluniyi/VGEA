@@ -14,10 +14,9 @@ rule quast_assembly_assessment:
         gene_features=config["viral_reference_gene_features"]
     output:
         quast_results="results/{id}/{id}.quast_results/report.tsv",
-    params:
-        quast_dir="results/{id}/{id}.quast_results"
+        quast_dir=directory("results/{id}/{id}.quast_results")
     shell:
-        "quast -r {input.quast_ref_genome} -g {input.gene_features} -o {params.quast_dir} {input.consensus_genome} > {log} 2>&1"
+        "quast -r {input.quast_ref_genome} -g {input.gene_features} -o {output.quast_dir} {input.consensus_genome} > {log} 2>&1"
 
 rule multiqc:
     message:
