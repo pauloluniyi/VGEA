@@ -126,5 +126,6 @@ rule tidy_shiver_output:
         "results/{id}/{id}.fasta"
     shell:
         """
+        sleep 10 # adding latency to try and stop this intermittent failure
         seqtk seq -l0 {input} | head -n2 | sed 's/?/N/g' > {output} 2> {log}
         """
