@@ -1,0 +1,9 @@
+name: read_processing
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - bwa=0.7.17
+  - fastp=0.20.1
+  - samtools=1.12

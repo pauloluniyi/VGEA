@@ -1,0 +1,7 @@
+name: iva
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - iva=1.0.11

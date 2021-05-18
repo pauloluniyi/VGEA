@@ -1,0 +1,22 @@
+$schema: "http://json-schema.org/draft-04/schema#"
+
+description: an entry in the sample sheet
+
+type: object
+
+# columns that the config/samples.tsv file can have and which type they should be
+properties:
+  id:
+    type: string
+    description: "Sample name/identifier e.g., Sample1"
+  r1:
+    type: string
+    description: "Path to r1 fastq file for specified sample"
+  r2:
+    type: string
+    description: "Path to r2 fastq file for specified sample"
+# columns that the config/samples.tsv file must have to pass schema validation
+required:
+  - id 
+  - r1
+  - r2

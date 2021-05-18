@@ -1,0 +1,8 @@
+##sequence-region NC_004297.1 1 7279
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=11620
+NC_004297.1	RefSeq	region	1	7279	.	+	.	ID=NC_004297.1:1..7279;Dbxref=taxon:11620;Name=L;gbkey=Src;genome=genomic;mol_type=genomic RNA;old-name=Lassa virus;segment=L;strain=Josiah
+NC_004297.1	RefSeq	gene	66	365	.	+	.	ID=gene-LASVsLgp1;Dbxref=GeneID:956586;Name=LASVsLgp1;gbkey=Gene;gene_biotype=protein_coding;locus_tag=LASVsLgp1
+NC_004297.1	RefSeq	CDS	66	365	.	+	0	ID=cds-NP_694871.1;Parent=gene-LASVsLgp1;Dbxref=Genbank:NP_694871.1,GeneID:956586;Name=NP_694871.1;Note=ring finger protein;gbkey=CDS;locus_tag=LASVsLgp1;product=Z protein;protein_id=NP_694871.1
+NC_004297.1	RefSeq	gene	466	7122	.	-	.	ID=gene-LASVsLgp2;Dbxref=GeneID:956587;Name=LASVsLgp2;gbkey=Gene;gene_biotype=protein_coding;locus_tag=LASVsLgp2
+NC_004297.1	RefSeq	CDS	466	7122	.	-	0	ID=cds-NP_694872.1;Parent=gene-LASVsLgp2;Dbxref=Genbank:NP_694872.1,GeneID:956587;Name=NP_694872.1;Note=L polymerase;gbkey=CDS;locus_tag=LASVsLgp2;product=L protein;protein_id=NP_694872.1
+
