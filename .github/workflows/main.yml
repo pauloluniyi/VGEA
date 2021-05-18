@@ -16,7 +16,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  snakemake:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -29,13 +29,13 @@ jobs:
       - name: Linting
         uses: snakemake/snakemake-github-action@v1.18.0
         with:
-          directory: '.test'
+          directory: '.'
           snakefile: 'workflow/Snakefile'
           args: '--lint'
       - name: Testing
         uses: snakemake/snakemake-github-action@v1.18.0
         with:
-          directory: '.test'
+          directory: '.'
           snakefile: 'workflow/Snakefile'
           args: '--cores 1 --configfile .tests/integration/test_config.yaml --use-conda --conda-cleanup-pkgs cache'
 
