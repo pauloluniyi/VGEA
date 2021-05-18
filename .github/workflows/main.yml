@@ -31,7 +31,7 @@ jobs:
         with:
           directory: '.'
           snakefile: 'workflow/Snakefile'
-          args: '--lint'
+          args: '--configfile .tests/integration/test_config.yaml --lint'
       - name: Testing
         uses: snakemake/snakemake-github-action@v1.18.0
         with:
