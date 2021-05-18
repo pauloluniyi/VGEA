@@ -6,4 +6,4 @@ include: "rules/qc.smk"
 rule all:
     input:
         multiqc_report="results/multiqc/multiqc_report.html",
-        genomes=expand(["results/{id}/{id}.shiver_assembly.fasta"], id=IDS)
+        genomes=expand(["results/{id}/{id}.fasta"], id=IDS)

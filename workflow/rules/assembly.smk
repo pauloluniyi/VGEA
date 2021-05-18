@@ -123,8 +123,8 @@ rule tidy_shiver_output:
     input:
         consensus_genome="results/{id}/shiver/{id}_remap_consensus_MinCov_15_30.fasta",
     output:
-        "results/{id}/{id}.shiver_assembly.fasta"
+        "results/{id}/{id}.fasta"
     shell:
         """
-        seqtk seq -l0 {input} | head -n2 | sed '/>/!s/-//g' | sed 's/\\?/N/g' | sed 's/_remap_consensus//g' | seqtk seq -l80 > {output} 2> {log}
+        seqtk seq -l0 {input} | head -n2 | sed '/>/!s/-//g' | sed 's/\\?/N/g' > {output} 2> {log}
         """

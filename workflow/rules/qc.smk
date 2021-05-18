@@ -9,7 +9,7 @@ rule quast_assembly_assessment:
     benchmark:
         "results/benchmarks/quast/{id}.tsv"
     input:
-        consensus_genome="results/{id}/{id}.shiver_assembly.fasta",
+        consensus_genome="results/{id}/{id}.fasta",
         quast_ref_genome=config["viral_reference_genome"],
         gene_features=config["viral_reference_gene_features"]
     output:
