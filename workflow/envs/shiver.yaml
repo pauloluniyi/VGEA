@@ -5,3 +5,4 @@ channels:
   - defaults
 dependencies:
   - shiver=1.3.5
+  - bc
