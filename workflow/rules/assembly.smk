@@ -115,7 +115,7 @@ rule tidy_shiver_output:
     message:
         "Cleaning shiver assembly for quast: {wildcards.id}"
     conda:
-        "../envs/seqtk.yaml"
+        "../envs/seqkit.yaml"
     log:
         "results/logs/{id}/{id}_shiver_tidy_contigs.log"
     benchmark:
@@ -126,6 +126,5 @@ rule tidy_shiver_output:
         "results/{id}/{id}.fasta"
     shell:
         """
-        sleep 10 # adding latency to try and stop this intermittent failure
-        seqtk seq -l0 {input} | head -n2 | sed 's/?/N/g' > {output} 2> {log}
+        seqkit range -r 1:1 -w 0 {input} | sed 's/?/N/g' > {output} 2> {log}
         """
