@@ -1,6 +1,6 @@
-rule assembly_assessment:
+rule quast_assembly_assessment:
     message:
-        "Evaluate the quality of genome assembly: {wildcards.id}"
+        "QUAST based genome assembly evaluation: {wildcards.id}"
     conda:
         "../envs/qc.yaml"
     # container: "docker://quay.io/biocontainers/quast:5.0.2--py36pl5262h30a8e3e_4"

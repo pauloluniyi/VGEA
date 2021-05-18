@@ -50,36 +50,9 @@ MinGapSizeToSplitGontig=20
 # MinContigLength parameter above but by default we are more permissive).
 MinContigFragmentLength=10
 
-# After aligning the contigs to the input existing references, by default we
-# trim off any contig sequence that overhangs the whole reference alignment,
-# i.e. in the alignment the beginning of the contig is to the left of the
-# beginning of all references, or the end of the contig is to the right of the
-# end of all references) Set the variable below to false to switch this
-# trimming off.
-TrimToKnownGenome=true
-
-# Different blast 'tasks' (modes) to try when blasting the contigs. We will run
-# each of the different tasks specified here (separated by whitespace) and merge
-# the results. With this default, we try only -task megablast; if
-# 'megablast blastn' were specified instead, we would also try -task blastn (and
-# merge results).
-BlastTasks='megablast'
-
-# Options to give blast when blasting the contigs; run your blastn command with
-# -help to investigate possibilities.
-ContigBlastArgs="-max_target_seqs 1 -word_size 17"
-
-# When two blast hits for the same contig have a fractional overlap (defined as
-# the length of the part of the contig spanned by both hits divided by the
-# length of the shorter of the two hits) equal to or greater than this value,
-# we will merge them into a single hit. When the fractional overlap is less than
-# this value, the two hits will be kept separate, resulting in the contig being
-# split into two parts (one corresponding to each hit) to be aligned separately.
-# A value of 1 or greater means partially overlapping hits are never merged
-# (which is how shiver has always behaved). A value between 0 and 1 means they
-# may or may not be merged, depending on how strongly they overlap.
-# Pending imminent testing the current default is likely to be changed to 0.8.
-ContigMinBlastOverlapToMerge='2'
+# Blast's "Word size for wordfinder algorithm" when blasting contigs against
+# references.
+BlastWordSize=17
 
 # If you have a more recent mafft installation that includes the --addfragments
 # option, we will use both --addfragments and --add to align the contigs to the
@@ -91,7 +64,7 @@ ContigMinBlastOverlapToMerge='2'
 MafftTestingStrategy="MinAlnLength"
 
 # Shall we trim adapaters and low quality bases from reads, using trimmomatic?
-TrimReadsForAdaptersAndQual=true
+TrimReadsForAdaptersAndQual=false
 # The trimmomatic manual explains at length the parameters controlling read
 # trimming; the reader is referred to it for explanations of the following
 # variables and other options not used here:
@@ -104,7 +77,7 @@ NumThreadsTrimmomatic=1
 # Shall we trim exact matches to PCR primers from the end of reads using fastaq?
 TrimReadsForPrimers=true
 # Shall we also trim matches to the PCR primers that differ by a single base
-# change? (This slows down the trimming step a lot.)
+# change?
 TrimPrimerWithOneSNP=false
 
 # Shall we clean (remove read pairs that look like contaminants)?
@@ -161,25 +134,16 @@ bwaOptions='-v 2'
 samtoolsReadFlags='-f 3 -F 4'
 
 # See http://www.htslib.org/doc/samtools.html for a description of samtools
-# mpileup options. Those used below mean that: the base alignment quality ('BAQ')
-# calculation (described at https://dx.doi.org/10.1093%2Fbioinformatics%2Fbtr076)
-# is turned off, as seems to be appropriate for HIV
-# (https://tinyurl.com/noBAQnoCry); the minimum quality for a base to be
-# retained is 5 (for backward/historical consistency), and only the first
-# 1000000 reads mapped to each point will be considered (NB a limit must be
-# provided; the default is 250).
-# Important note for data with overlapping read pairs: samtools mpileup avoids
-# double counting sequence in the overlap of a read pair by setting the quality
-# of all bases in the overlap to zero, for one of the two reads in the pair; 
-# then with any value of --min-BQ strictly greater than zero, these bases are
-# effectively deleted, such that the overlap sequence is counted only once.
-# If you set --min-BQ equal to zero, these bases will be counted (which is
-# generally undesirable).
+# mpileup options. Those used below mean that the minimum of the base quality
+# the 'BAQ' quantity (see http://samtools.sourceforge.net/mpileup.shtml for an
+# explanation) must be at least 5, and only the first 1000000 reads mapped to
+# each point will be considered (NB a limit must be provided; the default is
+# 250).
 mpileupOptions='--min-BQ 5 --max-depth 1000000'
 
 # Parameters for calling the consensus base at each position:
 # The minimum coverage (number of reads) to call a base instead of a '?'
-MinCov1=10
+MinCov1=15
 # The minimum coverage to use upper case for the base (to signal increased
 # confidence)
 MinCov2=30
@@ -224,23 +188,13 @@ MapContaminantReads=false
 # If you are using HXB2 as the reference for mapping (instead of a reference
 # constructed out of contigs as is normal for shiver), set this to false or
 # there will be a problem with two identically named sequences.
-GiveHXB2coords=false
+GiveHXB2coords=true
 
 # Shall we align the contigs to the consensus, for comparison?
-AlignContigsToConsensus=true
-
-# With the default value of false, the reads in their state just before mapping 
-# (after any trimming of primers or adapters or low-quality bases, and after
-# removal of suspected contaminant reads) will have 'temp_' prepended to their
-# filenames so that they removed by the "rm temp*" command that you probably
-# want to run after shiver to get rid of temporary files. Changing the value to
-# true means the reads in that state don't have 'temp_' prepended to their
-# filenames - handy if you want to keep them. (By request of shiver-pro Tanya!)
-KeepPreMappingReads=false
+AlignContigsToConsensus=false
 
 # Suffixes we'll append to the sample ID for output files.
-# If you change the extension (whatever follows the dot) you might break
-# something.
+# If you change the extension, you may well break something.
 OutputRefSuffix='_ref.fasta'
 DeduplicationStatsSuffix='_DedupStats.txt'
 PreDeduplicationBamSuffix='_PreDedup'
@@ -250,10 +204,10 @@ BaseFreqsWGlobalSuffix='_BaseFreqs_ForGlobalAln.csv'
 BaseFreqsWHXB2Suffix='_BaseFreqs_WithHXB2.csv'
 InsertSizeCountsSuffix='_InsertSizeCounts.csv'
 CoordsDictSuffix='_coords.csv'
+LongEnoughContigsSuffix='_contigs_NoShortOnes.fasta'
 BlastSuffix='.blast'
-MergedBlastSuffix='_MergedHits.blast'
-ReadsPreMapping1Suffix='_PreMapping_1.fastq'
-ReadsPreMapping2Suffix='_PreMapping_2.fastq'
+CleanedReads1Suffix='_clean_1.fastq' # .gz will be added when they're zipped
+CleanedReads2Suffix='_clean_2.fastq' # .gz will be added when they're zipped
 GlobalAlnSuffix='_ForGlobalAln.fasta'
 BestContigToRefAlignmentSuffix='_ContigsAndBestRef.fasta' # only for fully auto.
 ################################################################################
@@ -309,5 +263,3 @@ ContigAlignmentsToRefsDir='temp_ContigAlignmentsToRefsDir' # no whitespace!
 SamtoolsSortFile='temp_SamtoolsSortFile'
 RefWHXB2unaln='temp_RefWHXB2unaln.fasta'
 RefWHXB2aln='temp_RefWHXB2aln.fasta'
-ContigsNoShortOnes='temp_contigs_NoShortOnes.fasta'
-DiscardedContigNames='temp_DiscardedContigNames.txt'

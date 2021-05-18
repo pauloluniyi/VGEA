@@ -1,17 +1,17 @@
-rule assembly:
+rule iva_assembly:
     message:
-        "Assembly of forward and reverse reads: {wildcards.id}"
+        "IVA assembly of de-hosted trimmed reads: {wildcards.id}"
     conda:
         "../envs/iva.yaml"
     # container: "docker://quay.io/biocontainers/iva:1.0.11--py_0"
-    threads: 8
+    threads: 4
     log:
         "results/logs/{id}/{id}_iva.log"
     benchmark:
         "results/benchmarks/iva/{id}.tsv"
     input:
-        forward_read=rules.bamtoFastq.output.forward_read,
-        reverse_read=rules.bamtoFastq.output.reverse_read,
+        forward_read=rules.generate_dehosted_fastq.output.forward_read,
+        reverse_read=rules.generate_dehosted_fastq.output.reverse_read,
     output:
         contigs="results/{id}/{id}_iva/contigs.fasta"
     params:
@@ -23,9 +23,9 @@ rule assembly:
         """
 
 
-rule shiver_init:
+rule shiver_initialization:
     message:
-        "Shiver initialization: {wildcards.id}"
+        "Shiver run preparation: {wildcards.id}"
     conda:
         "../envs/shiver.yaml"
     # container: "docker://quay.io/biocontainers/shiver:1.3.5--py27_0"
@@ -50,9 +50,9 @@ rule shiver_init:
         """
 
 
-rule align_contigs:
+rule shiver_align_contigs_to_reference:
     message:
-        "Aligning contigs: {wildcards.id}"
+        "Shiver alignment of contigs to reference: {wildcards.id}"
     conda:
         "../envs/shiver.yaml"
     # container: "docker://quay.io/biocontainers/shiver:1.3.5--py27_0"
@@ -61,8 +61,8 @@ rule align_contigs:
     benchmark:
         "results/benchmarks/shiver_align_contigs/{id}.tsv"
     input:
-        initialization_directory=rules.shiver_init.output.initialization_directory,
-        contigs_file=rules.assembly.output.contigs,
+        initialization_directory=rules.shiver_initialization.output.initialization_directory,
+        contigs_file=rules.iva_assembly.output.contigs,
         shiver_config=config["shiver_config_file"],
     output:
         blast_hits="results/{id}/shiver/{id}.blast",
@@ -78,9 +78,9 @@ rule align_contigs:
         """
 
 
-rule map:
+rule shiver_read_remapping:
     message:
-        "Mapping paired-end reads to reference alignment: {wildcards.id}"
+        "Shiver mapping reads to reference alignment: {wildcards.id}"
     conda:
         "../envs/shiver.yaml"
     # container: "docker://quay.io/biocontainers/shiver:1.3.5--py27_0"
@@ -89,12 +89,12 @@ rule map:
     benchmark:
         "results/benchmarks/shiver_map_reads/{id}.tsv"
     input:
-        initialization_directory=rules.shiver_init.output.initialization_directory,
-        contigs=rules.assembly.output.contigs,
-        blast_hits=rules.align_contigs.output.blast_hits,
-        aligned_contigs_cut=rules.align_contigs.output.aligned_contigs_cut,
-        forward_read=rules.bamtoFastq.output.forward_read,
-        reverse_read=rules.bamtoFastq.output.reverse_read,
+        initialization_directory=rules.shiver_initialization.output.initialization_directory,
+        contigs=rules.iva_assembly.output.contigs,
+        blast_hits=rules.shiver_align_contigs_to_reference.output.blast_hits,
+        aligned_contigs_cut=rules.shiver_align_contigs_to_reference.output.aligned_contigs_cut,
+        forward_read=rules.generate_dehosted_fastq.output.forward_read,
+        reverse_read=rules.generate_dehosted_fastq.output.reverse_read,
         shiver_config=config["shiver_config_file"],
     output:
         ref_seqs="results/{id}/shiver/{id}_ref.fasta",
@@ -114,7 +114,7 @@ rule map:
 
 rule tidy_shiver_output:
     message:
-        "Clean shiver assembly: {wildcards.id}"
+        "Cleaning shiver assembly for quast: {wildcards.id}"
     conda:
         "../envs/seqtk.yaml"
     log:
