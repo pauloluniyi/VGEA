@@ -1,8 +1,12 @@
 from snakemake.utils import validate
+from snakemake.utils import min_version
+
 import pandas as pd
 from pathlib import Path
 
 containerized: "docker://finlaymaguire/vgea:latest"
+
+min_version("6.1")
 
 configfile: "config/config.yaml"
 validate(config, schema="../schemas/config.schema.yaml")
