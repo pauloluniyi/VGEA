@@ -4,4 +4,4 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - iva=1.0.11
+  - iva==1.0.11
