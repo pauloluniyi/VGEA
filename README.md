@@ -23,7 +23,7 @@ The VGEA pipeline requires the following dependencies:
 * Samtools (Li et al., 2009)
 * IVA (Hunt et al., 2015)
 * Shiver (Wymant et al., 2018)
-* Seqtk ([Li, 2018](https://github.com/lh3/seqtk))
+* SeqKit (Shen et al., 2016)
 * Quast (Gurevich et al., 2013)
 * Multiqc (Ewels et al., 2016)
 
