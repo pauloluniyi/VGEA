@@ -161,7 +161,7 @@ VGEA will output all results in the `results/` directory with a subfolder contai
     │   ├── test1.fastp.json        # fastp report in json format
     │   ├── test1.flagstat          # dehosting mapping statistics
     │   ├── test1_iva               # folder containing all IVA assembly files
-    │   ├── test1.quast_results     # folder containing all QUAST assembly assessment of test1.fast
+    │   ├── test1.quast_results     # folder containing all QUAST assembly assessment of test1.fasta
     │   ├── test1_r1_trimmed.fq     # fastp trimmed reads
     │   ├── test1_r2_trimmed.fq     
     │   └── test1.sam               # sam file containing all the reads that didn't map to the human reference
