@@ -152,7 +152,8 @@ VGEA will output all results in the `results/` directory with a subfolder contai
     │   ├── multiqc_data
     │   └── multiqc_report.html     # the interactive multiqc report
     ├── test1                       # all results for the sample "test1" 
-    │   ├── test1_1.fastq           # fastp trimmed and de-hosted reads for the sample 
+    │   ├── shiver                  # folder containing all shiver output files 
+    │   ├── test1_1.fastq           # fastp trimmed and de-hosted reads for the sample 
     │   ├── test1_2.fastq
     │   ├── test1.bam               # alignment against human reference 
     │   ├── test1.fasta             # final cleaned assembly from IVA and shiver
@@ -190,7 +191,7 @@ See [here](https://www.sylabs.io/docs/) for instructions to install Singularity.
 Then the workflow can be run as normal with `--use-singularity` added e.g.,
 
 ```
-snakemake --use-conda --use-singularity --configfile .test/integration/test_config.yaml -j 1
+snakemake --use-conda --use-singularity --configfile .tests/integration/test_config.yaml -j 1
 ```
 
 ## Testing
@@ -198,7 +199,7 @@ snakemake --use-conda --use-singularity --configfile .test/integration/test_conf
 To run a minimal integration test once snakemake and conda are installed:
 
 ```
-snakemake --use-conda --configfile .test/integration/test_config.yaml -j 1
+snakemake --use-conda --configfile .tests/integration/test_config.yaml -j 1
 ```
 
 # Contributions
