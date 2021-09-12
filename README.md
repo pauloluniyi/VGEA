@@ -1,4 +1,5 @@
-# VGEA
+# VGEA [![DOI](https://zenodo.org/badge/236802599.svg)](https://zenodo.org/badge/latestdoi/236802599)
+
 VGEA (Viral Genomes Easily Analyzed) is an RNA viral assembly toolkit.
 
 VGEA was developed to aid in the analysis of next generation sequencing data. Users can do the following with this pipeline:
@@ -207,3 +208,6 @@ snakemake --use-conda --configfile .tests/integration/test_config.yaml -j 1
 - Paul Eniola Oluniyi
 - Gerry Tonkin-Hill (https://gtonkinhill.github.io/)
 - Finlay Maguire (https://finlaymagui.re)
+
+
+[![DOI](https://zenodo.org/badge/236802599.svg)](https://zenodo.org/badge/latestdoi/236802599)
